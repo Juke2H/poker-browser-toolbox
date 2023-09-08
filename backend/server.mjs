@@ -5,6 +5,10 @@ import "./loadEnvironment.mjs";
 import { config } from 'dotenv';
 config({ path: './config.env' });
 
+//Import databases
+import dbCash from "./dbconn/connCash.mjs";
+import dbMTT from "./dbconn/connMTT.mjs";
+
 //Need to import all collections
 import cashBB from "./routes/dbcash/bb.mjs";
 import cashSB from "./routes/dbcash/sb.mjs";
@@ -59,5 +63,13 @@ app.use("/mttutg", mttUTG);
 
 // Start the Express server
 app.listen(PORT, () => {
+  // Perform database connection when server starts
+  dbCash.connectToServer(function (err) {
+    if (err) console.error(err);
+  });
+  dbMTT.connectToServer(function (err) {
+    if (err) console.error(err);
+  })
+
   console.log(`Server is running on port: ${PORT}`);
 });
