@@ -1,0 +1,75 @@
+/* Define color variables. */
+/*I put this calculator component into the app too late to use
+the same variable color system in other components.
+It's something to think about for the future.*/
+:root {
+  --primary: red; /* Primary color for operator buttons. */
+  --dark: black; /* Dark background color. */
+  --light: white; /* Light text color. */
+}
+
+/* Styling for the main frame. */
+.frame {
+  display: flex; /* Display children in a row. */
+  align-items: left; /* Align items along the left edge. */
+  justify-content: left; /* Justify content to the left. */
+}
+
+/* Styling for the display area. */
+.display {
+  padding: 16px; /* Padding around the display. */
+  text-align: right; /* Right-align text in the display. */
+  background-color: var(--dark); /* Set the background color. */
+  color: var(--light); /* Set the text color. */
+  font-size: 24px; /* Set the font size. */
+  font-weight: 300; /* Set the font weight. */
+  user-select: none; /* Disable text selection. */
+}
+
+/* Styling for the small additional span in the display. */
+.display span {
+  font-size: 18px;
+  color: #888;
+}
+
+/* Styling for the operator buttons. */
+.operators {
+  display: flex;
+}
+
+/* Styling for all buttons within the frame. */
+.frame button {
+  appearance: none; /* Reset default button appearance. */
+  outline: none; /* Remove outline on focus. */
+  border: none; /* Remove border. */
+  color: var(--light);
+  padding: 16px;
+  font-size: 20px;
+  cursor: pointer; /* Display pointer cursor on hover. */
+  transition: 0.1s; /* Smooth transition on hover. */
+}
+
+/* Styling for buttons on hover. */
+.frame button:hover {
+  opacity: 0.4; /* Reduce opacity on hover. */
+}
+
+/* Styling for operator buttons. */
+.operators button {
+  flex: 1 1 0%; /* Flexible sizing within container. */
+  background-color: var(--primary);
+  font-weight: 700;
+}
+
+/* Styling for digit buttons. */
+.digits {
+  display: flex;
+  flex-wrap: wrap; /* Wrap to the next row if needed. */
+}
+
+/* Styling for digit buttons. */
+.digits button {
+  flex: 1 1 33.333%; /* Flexible sizing within container. */
+  max-width: 33.333%; /* Limit maximum width. */
+  background-color: var(--dark);
+}

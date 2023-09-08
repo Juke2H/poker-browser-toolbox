@@ -1,0 +1,22 @@
+/* Styling for the poker hand button */
+.hand {
+    /* Button appearance */
+    background-color: white; /* Initial background color */
+    width: 40px; /* Button width */
+    height: 40px; /* Button height */
+    box-sizing:border-box;
+    text-decoration: none; /* No text underline */
+    font-family: Arial, Helvetica, sans-serif; /* Font family */
+    font-weight: bold; /* Bold font weight */
+    font-size: 15px; /* Font size */
+    cursor: pointer; /* Cursor changes to pointer on hover */
+    
+    /* Flexbox layout */
+    display: flex; /* Display as a flex container */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+
+    /* Border and visual styles */
+    border: 1px solid black; /* 1px black border */
+    user-select: none; /* Prevent text selection */
+}

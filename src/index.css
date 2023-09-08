@@ -1,0 +1,14 @@
+/* The fonts came default with either create-react-app or GitHub codespaces */
+/* Reset default margin and font for the whole page */
+body {
+  margin: 3px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Arial', 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+/* Styling for inline code elements */
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

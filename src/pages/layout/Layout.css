@@ -1,0 +1,149 @@
+/* Styling for the navigation table */
+.nav-table {
+  border-collapse: collapse; /* Collapse borders for table cells */
+  background-color: red;
+  table-layout: fixed; /* Use fixed layout algorithm */
+  width: 50%; /* Set the width to 50% of the container */
+  min-width: 550px; /* Minimum width of the table */
+  user-select: none; /* Prevent text selection */
+}
+
+/* Styling for the "table" the calculator and the rng button are in */
+.nav-table-2 {
+  background-color: white;
+  width: 50%;
+  min-width: 550px; /* Minimum width of the container */
+  display: inline-block; /* Display as an inline block element */
+  user-select: none;
+}
+
+/* Styling for individual cells in the navigation table */
+.nav-td {
+  border: 2px solid white;
+  height: 120px;
+}
+
+/* Styling for navigation buttons with links */
+.nav-btn-1 {
+  text-decoration: none; /* Remove text decoration (underlining) */
+  color: white; /* Set text color to white */
+  display: flex; /* Display as a flex container */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  height: 100%; /* Take up the full height of the container */
+  padding: 5px; /* Add padding around the button */
+}
+
+/* Hover effect for navigation buttons */
+.nav-btn-1:hover {
+  background-color: lightblue; /* Change background color on hover to light blue */
+}
+
+/* Styling for dropdown container */
+.dropdown {
+  position: relative; /* Set position to relative */
+  display: flex; /* Display as a flex container */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  width: 100%; /* Take up the full width of the container */
+  height: 100%; /* Take up the full height of the container */
+}
+
+/* Styling for dropdown menu */
+.menu {
+  position: absolute; /* Set position to absolute */
+  padding: 0; /* Remove padding */
+  width: 95%;
+  height: 100%; /* Take up the full height of the container */
+}
+
+/* Styling for individual items in the dropdown menu */
+.menu > li {
+  margin: 0; /* Remove margin */
+  height: 45%; /* Set height to 45% of the container */
+  background-color: red;
+  list-style-type: none; /* Remove list-style */
+}
+
+/* Styling for navigation selector buttons */
+.nav-selector {
+  background-color: red;
+  color: white;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  font-weight: bold; /* Set font weight to bold */
+  font-size: 20px; /* Set font size to 20px */
+  border: none; /* Remove border */
+  cursor: pointer; /* Set cursor to pointer on hover */
+  padding: 5px;
+  position: relative;
+}
+
+/* Styling for open-element buttons */
+.open-element {
+  background-color: red;
+  color: white;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  position: relative;
+}
+
+/* Hover effect for open-element buttons */
+.open-element:hover {
+  background-color: lightblue;
+}
+
+/* Styling for the right-side container (Calculator) */
+.open-element-2 {
+  border: 2px solid white;
+  display: table-cell; /* Display as a table cell */
+  float: right; /* Float to the right within the container */
+}
+
+/* Styling for the left-side container (RNG) */
+.open-element-3 {
+  border: 2px solid white;
+  display: table-cell;
+  float: left; /* Float to the left within the container */
+  width: 33.1%;
+}
+
+/* Styling for the random number generator button */
+.rngbutton {
+  font-weight: bold;
+  font-size: 20px;
+  border: none; /* Remove the button border */
+  height: 50px;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none; /* Disable text selection */
+}
+
+/* Hover effect for the random number generator button */
+.rngbutton:hover {
+  background-color: lightblue;
+}
+
+/* Styling for the displayed random value */
+.value {
+  font-weight: bold;
+  font-size: 20px;
+  height: 50px; 
+  background-color: red;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}

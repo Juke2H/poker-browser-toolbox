@@ -1,0 +1,5 @@
+/* Styling for the poker hand matrix table */
+.mat-table {
+  border-collapse: collapse; /* Collapse borders between table cells */
+  text-align: center; /* Center-align content within cells */
+}
