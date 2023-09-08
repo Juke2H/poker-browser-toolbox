@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import "./loadEnvironment.mjs";
+import { MongoClient } from "mongodb";
 
 import { config } from 'dotenv';
 config({ path: './config.env' });
@@ -61,15 +62,20 @@ app.use("/mttmp", mttMP);
 app.use("/mttutg1", mttUTG1);
 app.use("/mttutg", mttUTG);
 
-// Start the Express server
-app.listen(PORT, () => {
-  // Perform database connection when server starts
-  dbCash.connectToServer(function (err) {
-    if (err) console.error(err);
-  });
-  dbMTT.connectToServer(function (err) {
-    if (err) console.error(err);
-  })
+const connectionString = process.env.ATLAS_URI || "";
+const client = new MongoClient(connectionString);
 
+
+// Start the Express server
+app.listen(PORT, async () => {
+  // Perform database connection when server starts
+  try {
+    // Attempt to establish a connection to the MongoDB server
+    await client.connect();
+    console.log("MongoDB connection successful");
+  } catch (e) {
+    // If an error occurs during connection, log the error message
+    console.error(e);
+  };
   console.log(`Server is running on port: ${PORT}`);
 });
