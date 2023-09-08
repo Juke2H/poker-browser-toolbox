@@ -26,7 +26,7 @@ import mttMP from "./routes/dbmtt/mp.mjs";
 import mttUTG1 from "./routes/dbmtt/utg1.mjs";
 import mttUTG from "./routes/dbmtt/utg.mjs";
 
-const PORT = process.env.PORT || 5050;
+const PORT = process.env.PORT || 8080;
 const app = express();
 
 app.use(cors());
