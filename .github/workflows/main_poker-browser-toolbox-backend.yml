@@ -52,7 +52,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'poker-browser-toolbox-backend'
+          app-name: 'poker-browser-toolbox'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E27A69CB444E45D8824C2BB050C2F2C3 }}
           package: .
