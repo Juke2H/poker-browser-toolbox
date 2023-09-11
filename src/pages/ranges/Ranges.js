@@ -265,7 +265,7 @@ const Ranges = () => {
     try {
       //Sets loading state to show that connection is in progress.
       setIsLoading(true);
-      const response = await fetch(`https://20.105.216.34:8080/${destination}/`);
+      const response = await fetch(`/${destination}/`);
 
       /*If the response is anything other than the data,
       responds with an alert window stating the error text. */
@@ -503,7 +503,7 @@ const Ranges = () => {
     const newProfile = { ...form };
 
     //Attempt to find the collection, and send profile to collection.
-    await fetch(`https://20.105.216.34:8080/${connString}`, {
+    await fetch(`/${connString}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -538,7 +538,7 @@ const Ranges = () => {
     };
 
     //Try to find the profile that will be patched, and patch it.
-    await fetch(`https://20.105.216.34:8080/${connString}/${profileId}`, {
+    await fetch(`/${connString}/${profileId}`, {
       method: "PATCH",
       body: JSON.stringify(editedProfile),
       headers: {
@@ -594,7 +594,7 @@ const Ranges = () => {
   //Function for deleting a profile.
   const deleteProfile = async (id) => {
     //Try to find the profile, and delete it.
-    await fetch(`https://20.105.216.34:8080/${connString}/${id}`, {
+    await fetch(`/${connString}/${id}`, {
       method: "DELETE",
     }).catch((error) => {
       //And alert if profile isn't found.
