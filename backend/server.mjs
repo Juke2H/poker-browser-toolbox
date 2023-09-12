@@ -3,12 +3,9 @@ import cors from "cors";
 import "./loadEnvironment.mjs";
 import { MongoClient } from "mongodb";
 
+//Configure .env. I'm not sure if this is necessary since running locally only takes ".env" and not "config.env"
 import { config } from 'dotenv';
 config({ path: './config.env' });
-
-//Import databases
-import dbCash from "./dbconn/connCash.mjs";
-import dbMTT from "./dbconn/connMTT.mjs";
 
 //Need to import all collections
 import cashBB from "./routes/dbcash/bb.mjs";
@@ -34,6 +31,7 @@ import mttUTG from "./routes/dbmtt/utg.mjs";
 const PORT = process.env.PORT || 8080;
 const app = express();
 
+//Setup express to find both backend and frontend.
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'))

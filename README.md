@@ -18,13 +18,35 @@ The tools in the application are designed to be quickly, easily and frequently a
 
 ## Install
 
-Right now this isn't deployed anywhere, so it needs to be run locally with required node modules installed in both the backend and poker-browser-toolbox directories.
+This is the Azure deployment version. Because this shows the frontend through express, the static files need to be generated via "run build".
 
-To install the required node modules, navigate to poker-browser-toolbox/backend directory and execute "npm install". After that's done, do the same to the main poker-browser-toolbox directory.
+### If this needs to be run locally:
+Create an ATLAS URI connection parameter in "backend/.env":
+```
+ATLAS_URI=mongodb+srv://<username>:<password>@sandbox.jadwj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+PORT=5000
+```
 
-To start the server, you need to have a .env variable set in poker-browser-toolbox/backend/ as a file named .env. Because I don't want to include my .env in this repository, this file must be created. The variable inside .env is ATLAS_URI and it is the connection string (either "mongodb://<connection string>" or "mongodb+srv://<connection string>"). If the .env is ready, execute "node server.mjs" in the backend directory to start the server. It will tell you which port it is running from if successful.
+Run build to generate static files:
+```
+npm install
+npm run build
+```
 
-To start the application, navigate to poker-browser-toolbox and execute "npm start". If successful, it should tell you that it has compiled successfully, and open a browser. Alternatively, go to your browser and navigate to http://localhost:3000/ to see if it's running.
+Copy the generated build directory to backend for express:
+```
+cp -r ./build ./backend/public
+```
+
+Start server:
+```
+cd backend
+npm install
+node server.mjs
+```
+
+If successful, you should see "MongoDB connection successful" and "Server is running on port: 5000".
+Then just browse localhost:5000 to use the application
 
 ## Future updates
 
@@ -47,6 +69,8 @@ or (way more difficult unless deployed) if there are no database connections.
 This will be quite difficult to fit into the "quickly, easily and frequently accessible during play"-framework
 
 -Figure out what other tools are needed since three isn't exactly very many for a "toolbox".
+
+-Find a way around express showing "Cannot GET /<page>" if the browser is refreshed.
 
 ## Other information
 
