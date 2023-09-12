@@ -36,9 +36,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'))
 
-//I feel like there's a better way to do this.
-//I just don't have an idea on what that could be, or how to approach it.
-
 //Shows express all the different collections
 app.use("/cashbb", cashBB);
 app.use("/cashsb", cashSB);
