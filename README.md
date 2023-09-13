@@ -76,7 +76,8 @@ I got the basic structure for the calculator component from following this tutor
 
 I got most of my backend code from the MongoDB mern stack tutorial: https://www.mongodb.com/languages/mern-stack-tutorial
 
-The imported libraries are shown in each component, but outside of the "normal" stuff, I used math-expression-evaluator in the calculator component: https://www.npmjs.com/package/math-expression-evaluator
+The Azure deployment was done with the help of Apps on Azure Blog's MongoDB Atlas, Node JS and Azure App Service -tutorial: https://techcommunity.microsoft.com/t5/apps-on-azure-blog/getting-started-with-mongodb-atlas-nodejs-and-azure-app-service/ba-p/3776109
+
 
 The information for the calculation rules and examples is not my own. While they are very widely used and well known in the Poker world, I still feel the need to include the sources here. There are many different sources for this stuff, but I'm going to include one for each.
 
