@@ -60,8 +60,6 @@ The Home page will have the same things listed, but I'll put them here as well:
 hands are played a certain way only sometimes. This would both make
 the ranges more accurate and make the randomizer easier to use.
 
--If I want to deploy this somewhere, I might need to rewrite the backend again to accomodate a login system. Or make profiles unable to be edited or deleted in the deployment.
-
 -I might want to add a default set of ranges if the databases are empty, 
 or (way more difficult unless deployed) if there are no database connections.
 
@@ -69,8 +67,6 @@ or (way more difficult unless deployed) if there are no database connections.
 This will be quite difficult to fit into the "quickly, easily and frequently accessible during play"-framework
 
 -Figure out what other tools are needed since three isn't exactly very many for a "toolbox".
-
--Find a way around express showing "Cannot GET /<page>" if the browser is refreshed.
 
 ## Other information
 
