@@ -36,11 +36,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'))
 
-// Handles browser refreshes
-app.use('*', (req,res) => {
-  res.sendFile('index.html', { root: 'public' });
-});
-
 //Shows express all the different collections
 app.use("/cashbb", cashBB);
 app.use("/cashsb", cashSB);
@@ -61,6 +56,11 @@ app.use("/mttlj", mttLJ);
 app.use("/mttmp", mttMP);
 app.use("/mttutg1", mttUTG1);
 app.use("/mttutg", mttUTG);
+
+// Handles browser refreshes
+app.use('*', (req,res) => {
+  res.sendFile('index.html', { root: 'public' });
+});
 
 const connectionString = process.env.ATLAS_URI || "";
 const client = new MongoClient(connectionString);
