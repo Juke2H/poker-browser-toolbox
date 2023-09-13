@@ -31,10 +31,15 @@ import mttUTG from "./routes/dbmtt/utg.mjs";
 const PORT = process.env.PORT || 8080;
 const app = express();
 
-//Setup express to find both backend and frontend.
+//Sets up express to find both backend and frontend.
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'))
+
+// Handles browser refreshes
+app.use('*', (req,res) => {
+  res.sendFile('index.html', { root: 'public' });
+});
 
 //Shows express all the different collections
 app.use("/cashbb", cashBB);
