@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Rangebutton from "../../components/rangebutton/Rangebutton";
 
 const RangesAbout = () => {

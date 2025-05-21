@@ -1,8 +1,17 @@
-import React from "react";
 import "./Matrix.css";
-import Rangebutton from "../rangebutton/Rangebutton";
+import Rangebutton, {RangebuttonState} from "../rangebutton/Rangebutton";
 
-const Matrix = (props) => {
+export interface ComboMatrix {
+  [key: string]: RangebuttonState; // Object containing the active state of each combo.
+}
+
+export interface MatrixProps {
+  activeState: ComboMatrix;
+  handleClick: () => void; // Function to handle click events on the buttons.
+  handleBlur: () => void; // Function to handle blur events on the buttons.
+}
+
+const Matrix = (props: MatrixProps) => {
   /* Matrix of possible starting hands in Texas Hold'em.
   Hands with 2 cards of the same suit are at the top(ranks of the cards followed by an "s" for "suited").
   Hands with 2 cards of a different suit are at the bottom (ranks followed by an "o" for "offsuit").
