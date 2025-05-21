@@ -463,7 +463,7 @@ const Ranges = () => {
   };
 
   //Handles RangeButton onClicks to change colors.
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     console.log("Button clicked");
     console.log(event.currentTarget.id);
     //Sets buttonId to later include hand combo to form.
@@ -593,7 +593,8 @@ const Ranges = () => {
   const navigate = useNavigate();
 
   //Function to handle form submission.
-  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //The "button" is actually a div, might want to fix
+  const handleSubmit = (event: React.MouseEvent<HTMLDivElement>) => {
     //Stop any default action that would happen when submit is pressed.
 
     /*Because onBlur events happen before onClick,
@@ -630,7 +631,7 @@ const Ranges = () => {
   };
 
   //Function for deleting a profile.
-  const deleteProfile = async (id) => {
+  const deleteProfile = async (id: string) => {
     //Try to find the profile, and delete it.
     await fetch(`/${connString}/${id}`, {
       method: "DELETE",
@@ -834,7 +835,6 @@ const Ranges = () => {
         <div className="form-group">
           <label htmlFor="description">Description: </label>
           <textarea
-            type="text"
             className="form-control"
             id="description"
             rows={2}

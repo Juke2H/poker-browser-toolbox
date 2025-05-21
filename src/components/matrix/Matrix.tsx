@@ -7,7 +7,7 @@ export interface ComboMatrix {
 
 export interface MatrixProps {
   activeState: ComboMatrix;
-  handleClick: () => void; // Function to handle click events on the buttons.
+  handleClick: (event: React.MouseEvent<HTMLDivElement>) => void; // Function to handle click events on the buttons.
   handleBlur: () => void; // Function to handle blur events on the buttons.
 }
 
