@@ -34,9 +34,7 @@ The tools in the application are designed to be quickly, easily and frequently a
 
 ## Install
 
-This is the Azure deployment version. Because this shows the frontend through express, the static files need to be generated via "run build".
-
-### If this needs to be run locally:
+### To run locally:
 Create an ATLAS URI connection parameter in "backend/.env". This is specific to individual clusters, but it will look something like this:
 ```
 ATLAS_URI=mongodb+srv://<username>:<password>@<database cluster name>.0c5iv7s.mongodb.net/
