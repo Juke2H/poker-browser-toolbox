@@ -248,14 +248,14 @@ const Ranges = () => {
   State can't be used here since setting state is async. */
   let destination;
 
-  //Function to open a collection inside  a database
+  //Function to open position data (BB, SB...) inside a database (MTT or Cash)
   const handleCollection = async (event: React.MouseEvent<HTMLButtonElement>) => {
     clearForm(); //Clears existing form information
 
     console.log(event.currentTarget.id);
 
     if (location.database === "Cash") {
-      //If the open database is "Cash"
+      //If the open game type is "Cash"
 
       //Sets location state to show which collection (connection string) is open
       setLocation((prev) => {
@@ -291,6 +291,8 @@ const Ranges = () => {
     try {
       //Sets loading state to show that connection is in progress.
       setIsLoading(true);
+
+      //Setting state is async so using destination makes sure the connection starts
       const response = await fetch(`/${destination}/`);
 
       /*If the response is anything other than the data,
