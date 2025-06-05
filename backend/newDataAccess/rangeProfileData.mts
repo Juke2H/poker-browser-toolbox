@@ -22,7 +22,15 @@ export class rangeProfileQueries {
   //FetchById and fetchProfileCombos are separate because there are A LOT of combos and plays
   //Profiles might also not have combos someday, or I don't need to refetch the combos if I want the rest etc.
   async fetchById(profileId: string): Promise<any> {
-    //
+    const { data, error } = await this.database
+      .from("range_profiles")
+      .select()
+      .eq("id", `${profileId}`);
+    if (error) {
+      throw error;
+    } else {
+      return data;
+    }
   }
 
   //Fetches profiles and combos
