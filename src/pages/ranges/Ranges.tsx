@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Ranges.css";
-import Matrix from "../../components/matrix/Matrix";
+import Matrix, {ComboMatrix} from "../../components/matrix/Matrix";
 import ButtonArray from "../../components/buttonarray/ButtonArray";
 
 const Ranges = () => {
@@ -14,8 +14,21 @@ const Ranges = () => {
   //Keys are the collection names
   //Values are connection strings to the collections
 
+  //[key: string]: string is an index signature 
+  interface Collection {
+    UTG: string;
+    UTG1: string;
+    MP: string;
+    LJ: string;
+    HJ: string;
+    CO: string;
+    BTN: string;
+    SB: string;
+    BB: string;
+  }
+
   //Cash database
-  const cashCollections = {
+  const cashCollections: Collection = {
     UTG: "cashutg",
     UTG1: "cashutg1",
     MP: "cashmp",
@@ -28,7 +41,7 @@ const Ranges = () => {
   };
   
   //Tournament database
-  const mttCollections = {
+  const mttCollections: Collection = {
     UTG: "mttutg",
     UTG1: "mttutg1",
     MP: "mttmp",
@@ -39,9 +52,21 @@ const Ranges = () => {
     SB: "mttsb",
     BB: "mttbb",
   };
+
+  interface Profile {
+    _id?: string;
+    profilename: string;
+    range: {
+      call: string[];
+      raise: string[];
+    };
+    description: string;
+    type: string;
+    stack: string;
+  }
   
   //The state for the form structure
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<Profile>({
     profilename: "",
     range: {
       call: [],
@@ -63,7 +88,7 @@ const Ranges = () => {
   //Stores the active state for each combo in the matrix.
   //It should only ever be 0, 1 or 2.
 
-  const [active, setActive] = useState({
+  const [active, setActive] = useState<ComboMatrix>({
     "AA": 0, "AKs": 0, "AQs": 0, "AJs": 0, "ATs": 0, "A9s": 0, "A8s": 0, "A7s": 0, "A6s": 0, "A5s": 0, "A4s": 0, "A3s": 0, "A2s": 0,
     "AKo": 0, "KK": 0, "KQs": 0, "KJs": 0, "KTs": 0, "K9s": 0, "K8s": 0, "K7s": 0, "K6s": 0, "K5s": 0, "K4s": 0, "K3s": 0, "K2s": 0,
     "AQo": 0, "KQo": 0, "QQ": 0, "QJs": 0, "QTs": 0, "Q9s": 0, "Q8s": 0, "Q7s": 0, "Q6s": 0, "Q5s": 0, "Q4s": 0, "Q3s": 0, "Q2s": 0,
@@ -81,13 +106,14 @@ const Ranges = () => {
 
   /*The different play positions, stack sizes and range types. 
   Used with the ButtonArray component. */
+
   const positions = ["UTG", "UTG1", "MP", "LJ", "HJ", "CO", "BTN", "SB", "BB"];
   const stacksizes = ["150bb", "100bb", "60bb", "30bb", "20bb", "u20bb"];
   const rangetypes = ["RFI", "FRFI", "F3Bet", "F4bet"];
 
   /* States for the fetched profile list 
   and a singular profile ID that will be called for later. */
-  const [profiles, setProfiles] = useState([]);
+  const [profiles, setProfiles] = useState<Array<Profile>>([]);
   const [profileId, setProfileId] = useState("");
 
   //The state for the currently open stack size.
@@ -111,16 +137,16 @@ const Ranges = () => {
   const [typeToggle, setTypeToggle] = useState("");
 
   //States for the ability to edit and delete profiles
-  const [edit, setEdit] = useState(false);
-  const [del, setDel] = useState(false);
+  const [edit, setEdit] = useState<boolean>(false);
+  const [del, setDel] = useState<boolean>(false);
 
   /*States for when awaiting response from a collection and the error that shows if there is an error */
-  const [isLoading, setIsLoading] = useState(false);
-  const [err, setErr] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [err, setErr] = useState<string>("");
 
   /*States to show/hide debug functions checkLocation and checkStatus.
   I could put in a button for this inside the page, but I don't think that's good. */
-  const [d_bug, ] = useState(false);
+  const [d_bug, ] = useState<boolean>(false);
 
   //A function to empty a matrix (set the active of all combos to 0)
   const clearMatrix = () => {
@@ -200,7 +226,7 @@ const Ranges = () => {
   };
 
   //Closes everything under the current database and opens a new one
-  const handleDatabase = (db) => {
+  const handleDatabase = (db: string) => {
     clearProfile();
     setProfiles([]);
     setLocation(() => {
@@ -210,48 +236,48 @@ const Ranges = () => {
   };
 
   //Sets the stack size to the filter button id
-  const handleStack = (event) => {
+  const handleStack = (event: React.MouseEvent<HTMLButtonElement>) => {
     clearForm();
-    console.log(event.target.id);
-    setStack(event.target.id);
-    updateForm({ stack: event.target.id });
-    setStackToggle(event.target.id);
+    console.log(event.currentTarget.id);
+    setStack(event.currentTarget.id);
+    updateForm({ stack: event.currentTarget.id });
+    setStackToggle(event.currentTarget.id);
   };
 
   /*Declares a variable to hold the initial connection string.
   State can't be used here since setting state is async. */
   let destination;
 
-  //Function to open a collection inside  a database
-  const handleCollection = async (event) => {
+  //Function to open position data (BB, SB...) inside a database (MTT or Cash)
+  const handleCollection = async (event: React.MouseEvent<HTMLButtonElement>) => {
     clearForm(); //Clears existing form information
 
-    console.log(event.target.id);
+    console.log(event.currentTarget.id);
 
     if (location.database === "Cash") {
-      //If the open database is "Cash"
+      //If the open game type is "Cash"
 
       //Sets location state to show which collection (connection string) is open
       setLocation((prev) => {
-        return { ...prev, collection: cashCollections[event.target.id] };
+        return { ...prev, collection: cashCollections[event.currentTarget.id as keyof Collection] };
       });
       //Also updates destination variable for fetch
-      destination = cashCollections[event.target.id];
+      destination = cashCollections[event.currentTarget.id as keyof Collection];
       /*Even if the connection string state can't be used in this function,
       I still want to set it and use it later */
-      setConnString(cashCollections[event.target.id]);
+      setConnString(cashCollections[event.currentTarget.id as keyof Collection]);
 
       console.log(location.database);
 
     } else if (location.database === "Tournament") {
       //Else if the open database is "Tournament"
       setLocation((prev) => {
-        return { ...prev, collection: mttCollections[event.target.id] };
+        return { ...prev, collection: mttCollections[event.currentTarget.id as keyof Collection] };
       });
 
-      destination = mttCollections[event.target.id];
+      destination = mttCollections[event.currentTarget.id as keyof Collection];
 
-      setConnString(mttCollections[event.target.id]);
+      setConnString(mttCollections[event.currentTarget.id as keyof Collection]);
 
       console.log(location.database);
     } else {
@@ -265,6 +291,8 @@ const Ranges = () => {
     try {
       //Sets loading state to show that connection is in progress.
       setIsLoading(true);
+
+      //Setting state is async so using destination makes sure the connection starts
       const response = await fetch(`/${destination}/`);
 
       /*If the response is anything other than the data,
@@ -282,7 +310,7 @@ const Ranges = () => {
 
       //Sets profiles to the found data.
       setProfiles(profiles_json);
-    } catch (err) {
+    } catch (err: any) {
       //If an error is found, sets the error state and shows it on the page.
       setErr(err.message);
     } finally {
@@ -292,10 +320,10 @@ const Ranges = () => {
 
     //Sets location.position to the clicked button.
     setLocation((prev) => {
-      return { ...prev, position: event.target.id };
+      return { ...prev, position: event.currentTarget.id };
     });
     //And sets toggle to show the open collection.
-    setCollectionToggle(event.target.id);
+    setCollectionToggle(event.currentTarget.id);
   };
 
 
@@ -319,9 +347,12 @@ const Ranges = () => {
   };
 
   //Sets rangetype to selected option and empties previous form.
-  const handleType = (event) => {
+  //Using event.currentTarget to specify to TypeScript that the event happens where the listener is (the button) and not a potential child.
+  //For example, attaching a listener to a div that has a button child makes event.target (button) and event.currentTarget(div with listener) different.
+  //Using currentTarget isn't always possible so TypeScript also accepts specified typing for the HTMLElement(const asd = event.currentTarget as HTMLButtonElement).
+  const handleType = (event: React.MouseEvent<HTMLButtonElement>) => {
     clearMatrix();
-    console.log(event.target.id);
+    console.log(event.currentTarget.id);
     setForm((prev) => {
       return {
         ...prev,
@@ -336,11 +367,11 @@ const Ranges = () => {
     });
     setProfileId("");
 
-    setRangetype(event.target.id);
+    setRangetype(event.currentTarget.id);
 
-    updateForm({ type: event.target.id });
+    updateForm({ type: event.currentTarget.id });
 
-    setTypeToggle(event.target.id);
+    setTypeToggle(event.currentTarget.id);
 
     setEdit(false);
     setDel(false);
@@ -378,16 +409,18 @@ const Ranges = () => {
   };
 
   //Opens a profile from the list.
-  const openProfile = (profile) => {
+  const openProfile = (profile: string) => {
     //Make the profile into a JavaScript object.
-    let profile_object = JSON.parse(profile);
+    let profile_object: Profile = JSON.parse(profile);
 
     console.log(profile);
     console.log(profile_object);
     console.log(Object.entries(profile_object.range));
 
     //Set profileId into the JavaScript object.
-    setProfileId(profile_object._id);
+    /*Asserting _id as non-null because every profile has an _id in the database, 
+    but _id isn't used in every function that uses the interface */
+    setProfileId(profile_object._id!);
 
     //Clear all previously open profile elements and states.
     clearMatrix();
@@ -425,27 +458,34 @@ const Ranges = () => {
   };
 
   //Update-function for text input fields.
-  const updateForm = (value) => {
+  const updateForm = (value: object) => {
     setForm((prev) => {
       return { ...prev, ...value };
     });
   };
 
   //Handles RangeButton onClicks to change colors.
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     console.log("Button clicked");
-    console.log(event.target.id);
+    console.log(event.currentTarget.id);
     //Sets buttonId to later include hand combo to form.
-    setButtonId(event.target.id);
+    setButtonId(event.currentTarget.id);
     //Sets active from 0 to 1, 1 to 2 or 2 to 0 when clicked.
     setActive((prev) => {
-      if (active[event.target.id] === 0) {
-        return { ...prev, [event.target.id]: 1 };
-      } else if (active[event.target.id] === 1) {
-        return { ...prev, [event.target.id]: 2 };
-      } else if (active[event.target.id] === 2) {
-        return { ...prev, [event.target.id]: 0 };
+      const newActive = { ...prev };
+      //Stores the current id of the clicked button.
+      const currentEventValue = active[event.currentTarget.id];
+
+      //Sets the id of the clicked button to the next, in order 0, 1, 2, 0.
+      if (currentEventValue === 0) {
+        newActive[event.currentTarget.id] = 1;
+      } else if (currentEventValue === 1) {
+        newActive[event.currentTarget.id] = 2;
+      } else {
+        newActive[event.currentTarget.id] = 0;
       }
+
+      return newActive;
     });
     console.log(active);
   };
@@ -473,8 +513,8 @@ const Ranges = () => {
             call: form.range.call.filter((combo) => combo !== buttonId),
           },
         };
-      } else if (active[buttonId] === 0) {
-      /*If buttonId is 0; 
+      } else {
+      /*If buttonId is 0 (it can't be anything else at this point), 
         removes it from both ranges */
         return {
           ...prev,
@@ -555,13 +595,14 @@ const Ranges = () => {
   const navigate = useNavigate();
 
   //Function to handle form submission.
-  const handleSubmit = (e) => {
+  //The "button" is actually a div, might want to fix
+  const handleSubmit = (event: React.MouseEvent<HTMLDivElement>) => {
     //Stop any default action that would happen when submit is pressed.
 
     /*Because onBlur events happen before onClick,
     event.preventDefault does not stop handleBlur if 
     submit is pressed right after a range button */
-    e.preventDefault();
+    event.preventDefault();
 
     //Check if the form is filled up:
     //If yes, then submit or edit;
@@ -592,7 +633,7 @@ const Ranges = () => {
   };
 
   //Function for deleting a profile.
-  const deleteProfile = async (id) => {
+  const deleteProfile = async (id: string) => {
     //Try to find the profile, and delete it.
     await fetch(`/${connString}/${id}`, {
       method: "DELETE",
@@ -630,12 +671,13 @@ const Ranges = () => {
         ) : null}
 
         {/* Buttons to open the databases. */}
+        {/* Div TabIndex and rows in TypeScript is specified as a number, so {1} is used despite it ending up as a string later anyway. */}
         <div className="form-group">
           <div
             className="db-btn"
-            tabIndex="1"
+            tabIndex={0}
             style={
-              dbToggle === "Cash" ? { backgroundColor: "chartreuse", color: "black" } : null
+              dbToggle === "Cash" ? { backgroundColor: "chartreuse", color: "black" } : undefined
             }
             onClick={() => handleDatabase("Cash")}
           >
@@ -643,9 +685,9 @@ const Ranges = () => {
           </div>
           <div
             className="db-btn"
-            tabIndex="1"
+            tabIndex={0}
             style={
-              dbToggle === "Tournament" ? { backgroundColor: "chartreuse", color: "black" } : null
+              dbToggle === "Tournament" ? { backgroundColor: "chartreuse", color: "black" } : undefined
             }
             onClick={() => handleDatabase("Tournament")}
           >
@@ -763,10 +805,10 @@ const Ranges = () => {
 
       {/* Clear buttons. */}
       <div className="mat-btns">
-        <div tabIndex="1" className="db-btn" onClick={clearForm}>
+        <div tabIndex={0} className="db-btn" onClick={clearForm}>
           Clear Form
         </div>
-        <div tabIndex="1" className="db-btn" onClick={clearMatrix}>
+        <div tabIndex={0} className="db-btn" onClick={clearMatrix}>
           Clear Matrix
         </div>
       </div>
@@ -795,10 +837,9 @@ const Ranges = () => {
         <div className="form-group">
           <label htmlFor="description">Description: </label>
           <textarea
-            type="text"
             className="form-control"
             id="description"
-            rows="2"
+            rows={2}
             value={form.description}
             onChange={(e) => updateForm({ description: e.target.value })}
           />
@@ -853,10 +894,10 @@ const Ranges = () => {
         {/* Toggle edit button if profileId exists. */}
         {profileId !== "" ? (
           <div
-            tabIndex="1"
+            tabIndex={0}
             className="edit-btn"
             style={
-              edit ? { backgroundColor: "chartreuse", color: "black" } : null
+              edit ? { backgroundColor: "chartreuse", color: "black" } : undefined
             }
             onClick={toggleEdit}
           >
@@ -866,12 +907,12 @@ const Ranges = () => {
 
         {/* Submit and delete buttons. */}
         {profileId === "" || edit === true ? (
-          <div tabIndex="1" className="edit-btn" onClick={handleSubmit}>
+          <div tabIndex={0} className="edit-btn" onClick={handleSubmit}>
             Submit
           </div>
         ) : null}
         {edit === true ? (
-          <div tabIndex="1" className="edit-btn" onClick={toggleDelete}>
+          <div tabIndex={0} className="edit-btn" onClick={toggleDelete}>
             Delete
           </div>
         ) : null}
@@ -879,13 +920,13 @@ const Ranges = () => {
           <>
             <b>Are you sure?</b>
             <div
-              tabIndex="1"
+              tabIndex={0}
               className="del-btn"
               onClick={() => deleteProfile(profileId)}
             >
               Yes
             </div>
-            <div tabIndex="1" className="del-btn" onClick={toggleDelete}>
+            <div tabIndex={0} className="del-btn" onClick={toggleDelete}>
               No
             </div>
           </>

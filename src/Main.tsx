@@ -41,7 +41,7 @@ const router = createBrowserRouter([
 ])
 
 // Get the root element from the DOM
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
 // Render the application with the router configuration
 root.render(
