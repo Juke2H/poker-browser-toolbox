@@ -2,7 +2,8 @@ import "./Rangebutton.css";
 
 export type RangebuttonState = 0 | 1 | 2;
 
-export interface RangebuttonProps {
+//Should this be an interface because of the methods?
+export type RangebuttonProps = {
   active: RangebuttonState; // Indicates the state of the button (0, 1, or 2).
   text: string; // The text to be displayed on the button.
   id?: string; // The ID of the button.

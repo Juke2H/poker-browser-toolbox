@@ -1,11 +1,12 @@
 import "./Matrix.css";
 import Rangebutton, { RangebuttonState } from "../rangebutton/Rangebutton";
 
-export interface ComboMatrix {
+export type ComboMatrix = {
   [key: string]: RangebuttonState; // Object containing the active state of each combo.
 }
 
-export interface MatrixProps {
+//Should this be an interface because of the methods?
+export type MatrixProps = {
   activeState: ComboMatrix;
   handleClick: (event: React.MouseEvent<HTMLDivElement>) => void; // Function to handle click events on the buttons.
   handleBlur: () => void; // Function to handle blur events on the buttons.

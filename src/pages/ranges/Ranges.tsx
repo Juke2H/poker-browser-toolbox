@@ -15,7 +15,7 @@ const Ranges = () => {
   //Values are connection strings to the collections
 
   //[key: string]: string is an index signature 
-  interface Collection {
+  type Collection = {
     UTG: string;
     UTG1: string;
     MP: string;
@@ -53,6 +53,7 @@ const Ranges = () => {
     BB: "mttbb",
   };
 
+  //Interface instead of type in case it will be extended
   interface Profile {
     _id?: string;
     profilename: string;
