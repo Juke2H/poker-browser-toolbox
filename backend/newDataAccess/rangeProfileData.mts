@@ -16,6 +16,11 @@ import {
 
 //A class for profile data access
 //Class might need to Implement an interface
+
+//A class is used because it's easier to work with a database client when it's imported into the constructor
+
+// Supabase provides an SQL to REST API Translator:
+// https://supabase.com/docs/guides/api/sql-to-rest
 export class rangeProfileQueries {
   constructor(private database: SupabaseClient) {}
 
@@ -35,17 +40,57 @@ export class rangeProfileQueries {
 
   //Fetches profiles and combos
   async fetchWithCombos(profileId: string): Promise<any> {
-    //
+    const { data, error } = await this.database
+      .from("range_profiles")
+      .select(
+        `
+    profile_name,
+    description,
+    range_type,
+    game_type,
+    stack_size,
+    position,
+    is_template,
+    owner_id,
+    ...profile_combos!inner(
+      profile_id,
+      combo,
+      play,
+      ...hand_combos!inner()
+    )
+    `
+      )
+      .eq("id", `${profileId}`);
+    if (error) {
+      throw error;
+    } else {
+      return data;
+    }
   }
 
   //Fetches only combos
 
   async fetchOnlyCombos(profileId: string): Promise<any> {
-    //
+    const { data, error } = await this.database
+      .from("profile_combos")
+      .select(
+        `
+    combo,
+    play,
+    ...hand_combos!inner()
+    `
+      )
+      .eq("profile_id", `${profileId}`);
+    if (error) {
+      throw error;
+    } else {
+      return data;
+    }
   }
 
   //Profile interface
-  async insertProfile(profile: NewRangeProfile): Promise<RangeProfileRow> {
+  // Promise<RangeProfileRow>
+  async insertProfile(profile: NewRangeProfile): Promise<any> {
     //
   }
 
@@ -54,10 +99,11 @@ export class rangeProfileQueries {
     //join profile_id to range_profiles.id, add combo, add play, join combo to hand_combos.combo_name to make sure the combo is right.
   }
 
+  // Promise<RangeProfileRow>
   async updateProfile(
     profileId: string,
     changes: Partial<NewRangeProfile>
-  ): Promise<RangeProfileRow> {
+  ): Promise<any> {
     //
   }
 
