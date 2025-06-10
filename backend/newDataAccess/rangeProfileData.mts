@@ -24,6 +24,20 @@ import {
 export class rangeProfileQueries {
   constructor(private database: SupabaseClient) {}
 
+  //.is(column, boolean/null)
+  async fetchAllTemplates(): Promise<any> {
+    const { data, error } = await this.database
+      .from("range_profiles")
+      .select()
+      .is("is_template", true);
+    if (error) {
+      throw error;
+    } else {
+      console.log(data);
+      return data;
+    }
+  }
+
   //FetchById and fetchProfileCombos are separate because there are A LOT of combos and plays
   //Profiles might also not have combos someday, or I don't need to refetch the combos if I want the rest etc.
   //Check if undefined?
@@ -35,7 +49,7 @@ export class rangeProfileQueries {
     if (error) {
       throw error;
     } else {
-      console.log(data)
+      console.log(data);
       return data;
     }
   }
@@ -66,7 +80,7 @@ export class rangeProfileQueries {
     if (error) {
       throw error;
     } else {
-      console.log(data)
+      console.log(data);
       return data;
     }
   }
