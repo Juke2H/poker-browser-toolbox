@@ -10,6 +10,8 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     // skip deep-dive into every .d.ts in node_modules
     "skipLibCheck": true,
     "allowJs": true, // allow JS files to be part of the compilation
