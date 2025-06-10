@@ -22,7 +22,7 @@ import { RawProfileRow } from "../newDataAccess/rangeProfileInterface.mts";
 export type ProfileRanges = {
   call: Array<string>;
   raise: Array<string>;
-}
+};
 
 export type ProfileTypes = {
   _id: string;
@@ -70,13 +70,25 @@ export async function parseProfile(profileId: string): Promise<ProfileTypes> {
     stackSize,
     position,
     isTemplate,
-    ownerId
+    ownerId,
   };
 
-  return parsedProfileRow
-};
+  return parsedProfileRow;
+}
 
-export async function parsedProfileWithRanges(profileId: string): Promise<ProfileTypes> {
+// The return is an array with objects representing rows
+// In this case probably a row (ie an object) per play
+export async function parsedProfileWithRanges(
+  profileId: string
+): Promise<ProfileTypes> {
+  const rows: Array<RawProfileRow> = await rangeProfileRepository.fetchById(
+    profileId
+  );
+
+  //Check if profile was found
+  if (rows.length === 0) {
+    throw new Error("Profile not found");
+  }
   //
 }
 
