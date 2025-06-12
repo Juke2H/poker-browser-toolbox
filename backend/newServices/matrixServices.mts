@@ -77,11 +77,11 @@ export async function parseProfile(profileId: string): Promise<ProfileTypes> {
 }
 
 // The return is an array with objects representing rows
-// In this case probably a row (ie an object) per play
+// The return needs to be JSON.stringify'd
 export async function parsedProfileWithRanges(
   profileId: string
 ): Promise<ProfileTypes> {
-  const rows: Array<RawProfileRow> = await rangeProfileRepository.fetchById(
+  const rows: Array<RawProfileRow> = await rangeProfileRepository.fetchWithCombos(
     profileId
   );
 
@@ -90,6 +90,7 @@ export async function parsedProfileWithRanges(
     throw new Error("Profile not found");
   }
   //
+
 }
 
 export async function parseRanges(profileId: string): Promise<ProfileRanges> {

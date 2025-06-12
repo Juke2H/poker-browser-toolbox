@@ -45,8 +45,9 @@ export class rangeProfileQueries {
     const { data, error } = await this.database
       .from("range_profiles")
       .select()
-      .eq("id", `${profileId}`);
+      .eq("id", profileId);
     if (error) {
+      console.log(error);
       throw error;
     } else {
       console.log(data);
@@ -55,6 +56,7 @@ export class rangeProfileQueries {
   }
 
   //Fetches profiles and combos
+  //Return is an array with a single object that has a nested profile_combos object with hand and play
   async fetchWithCombos(profileId: string | undefined): Promise<any> {
     const { data, error } = await this.database
       .from("range_profiles")
@@ -68,25 +70,24 @@ export class rangeProfileQueries {
     position,
     is_template,
     owner_id,
-    ...profile_combos!inner(
-      profile_id,
+    profile_combos (
       combo,
-      play,
-      ...hand_combos!inner()
+      play
     )
     `
       )
-      .eq("id", `${profileId}`);
+      .eq("id", profileId);
     if (error) {
+      console.log(error);
       throw error;
     } else {
-      console.log(data);
+      console.log(JSON.stringify(data));
       return data;
     }
   }
 
   //Fetches only combos
-
+  //This is likely wrong because PostgREST does not like spread operators in one-many and many-many
   async fetchOnlyCombos(profileId: string): Promise<any> {
     const { data, error } = await this.database
       .from("profile_combos")
