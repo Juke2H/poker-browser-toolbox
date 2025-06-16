@@ -2,7 +2,7 @@
 
 Welcome to the README page for the Poker Browser Toolbox. This application was created by me as both a learning opportunity and to be a set of tools to help me make quick checks and calculations during my online Poker sessions.
 
-![Nav-example](images/nav-example.png)
+![Nav-example](../images/nav-example.png)
 
 ## The tools
 
@@ -10,23 +10,23 @@ Currently this application has three tools:
 
 ### A Randomizer 
 
-![Rng-example](images/rng-example.png)
+![Rng-example](../images/rng-example.png)
 
 Once selected, it shows up right below the nav bar on the left side and can be used by clicking the "Randomize" -button. The result is a random number between 1 and 100 (inclusive). Randomization is used in Poker to make good decisions in situations where taking the same action with the same hand every time is not a good strategy.
 
 ### An on-screen calculator
 
-![Calc-example](images/calc-example.png)
+![Calc-example](../images/calc-example.png)
 
 A simple calculator that once selected, shows up under the nav bar on the right side. You can use this calculator to quickly calculate simple arithmetic to calculate your Pot Odds or to figure out how likely your draw is to complete, to name a few.
 
 ### A Range Matrix and a set of pre-flop profiles 
 
-![Db-example](images/database-example.png)
+![Db-example](../images/database-example.png)
 
 The Ranges tool uses two MongoDB databases (one collection for each position) to store cash game and tournament profiles. Those profiles can be filtered and then opened based on the position (UTG, UTG+1...), stack size (bb) and type (RFI, FRFI, F3-bet...). Opening a profile will show a name, description, type, stack size and the range inside the matrix. Profiles can be created (and currently they must if your databases don't have any), opened, edited (by toggling edit and then submitting edited inputs) and deleted (by first toggling edit and then "delete profile"). Editing or creating the range can be done by clicking on the hand combinations inside the matrix. The colors cycle between white (fold/check/not in range), green (call) and red (raise).
 
-![Matrix-example](images/matrix-example.png)
+![Matrix-example](../images/matrix-example.png)
 
 ## The goal
 
