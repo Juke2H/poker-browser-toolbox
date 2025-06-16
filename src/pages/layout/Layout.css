@@ -10,10 +10,67 @@
 
 /* Styling for the "table" the calculator and the rng button are in */
 .nav-table-2 {
+  box-sizing: border-box;
+  border: 2px solid white;
   background-color: white;
   width: 50%;
   min-width: 550px; /* Minimum width of the container */
   display: inline-block; /* Display as an inline block element */
+  vertical-align: top;
+  user-select: none;
+  position: relative;
+}
+
+.calculator-container {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+.rng-container {
+  position: absolute;
+  display: flex;
+  justify-content: flex-start;
+  z-index: 1000;
+  width: 100%;
+}
+
+/* Styling for the random number generator button */
+.rngbutton {
+  font-weight: bold;
+  font-size: 20px;
+  border: none; /* Remove the button border */
+  height: 50px;
+  width: 33.1%;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none; /* Disable text selection */
+}
+
+/* Hover effect for the random number generator button */
+.rngbutton:hover {
+  background-color: lightblue;
+}
+
+/* Styling for the displayed random value */
+.value {
+  font-weight: bold;
+  font-size: 20px;
+  height: 50px;
+  width: 100px;
+  border-left: 2px solid white;
+  box-sizing: border-box;
+  background-color: red;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   user-select: none;
 }
 
@@ -98,52 +155,4 @@
 /* Hover effect for open-element buttons */
 .open-element:hover {
   background-color: lightblue;
-}
-
-/* Styling for the right-side container (Calculator) */
-.open-element-2 {
-  border: 2px solid white;
-  display: table-cell; /* Display as a table cell */
-  float: right; /* Float to the right within the container */
-}
-
-/* Styling for the left-side container (RNG) */
-.open-element-3 {
-  border: 2px solid white;
-  display: table-cell;
-  float: left; /* Float to the left within the container */
-  width: 33.1%;
-}
-
-/* Styling for the random number generator button */
-.rngbutton {
-  font-weight: bold;
-  font-size: 20px;
-  border: none; /* Remove the button border */
-  height: 50px;
-  background-color: red;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  user-select: none; /* Disable text selection */
-}
-
-/* Hover effect for the random number generator button */
-.rngbutton:hover {
-  background-color: lightblue;
-}
-
-/* Styling for the displayed random value */
-.value {
-  font-weight: bold;
-  font-size: 20px;
-  height: 50px; 
-  background-color: red;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  user-select: none;
 }

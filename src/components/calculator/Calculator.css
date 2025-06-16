@@ -10,9 +10,11 @@ It's something to think about for the future.*/
 
 /* Styling for the main frame. */
 .frame {
+  position: relative;
   display: flex; /* Display children in a row. */
   align-items: left; /* Align items along the left edge. */
   justify-content: left; /* Justify content to the left. */
+  z-index: 1000;
 }
 
 /* Styling for the display area. */

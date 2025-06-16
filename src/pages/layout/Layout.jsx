@@ -176,11 +176,11 @@ const Layout = () => {
 
         {/* The calculator and random number generator elements. */}
         <div className="nav-table-2">
-          <div className="open-element-2">
+          <div className="calculator-container">
             {/* Render the Calculator component if calcOpen is true. */}
             {calcOpen ? <Calculator /> : null}
           </div>
-          <div className="open-element-3">
+          <div className="rng-container">
             {/* Render the random number generator elements if rngOpen is true. */}
             {rngOpen ? (
               <div className="rngbutton" onClick={() => randomizer(1, 100)}>
