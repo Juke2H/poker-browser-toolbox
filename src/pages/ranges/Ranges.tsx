@@ -237,7 +237,7 @@ const Ranges = () => {
   };
 
   //Sets the stack size to the filter button id
-  const handleStack = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleStack = (event: React.MouseEvent<HTMLDivElement>) => {
     clearForm();
     console.log(event.currentTarget.id);
     setStack(event.currentTarget.id);
@@ -250,7 +250,7 @@ const Ranges = () => {
   let destination;
 
   //Function to open position data (BB, SB...) inside a database (MTT or Cash)
-  const handleCollection = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCollection = async (event: React.MouseEvent<HTMLDivElement>) => {
     clearForm(); //Clears existing form information
 
     console.log(event.currentTarget.id);
@@ -350,8 +350,8 @@ const Ranges = () => {
   //Sets rangetype to selected option and empties previous form.
   //Using event.currentTarget to specify to TypeScript that the event happens where the listener is (the button) and not a potential child.
   //For example, attaching a listener to a div that has a button child makes event.target (button) and event.currentTarget(div with listener) different.
-  //Using currentTarget isn't always possible so TypeScript also accepts specified typing for the HTMLElement(const asd = event.currentTarget as HTMLButtonElement).
-  const handleType = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //Using currentTarget isn't always possible so TypeScript also accepts specified typing for the HTMLElement(const asd = event.currentTarget as HTMLDivElement).
+  const handleType = (event: React.MouseEvent<HTMLDivElement>) => {
     clearMatrix();
     console.log(event.currentTarget.id);
     setForm((prev) => {
