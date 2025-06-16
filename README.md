@@ -45,7 +45,7 @@ Instructions on how to create your connection string can be found here: https://
 Run build to generate static files:
 ```
 npm install
-npm run build
+npx vite build
 ```
 
 Copy the generated build directory to backend for express:
@@ -65,7 +65,11 @@ Then just browse localhost:5000 to use the application
 
 ## Future updates
 
-The Home page will have the same things listed, but I'll put them here as well:
+### Currently happening
+
+I'm currently migrating the MongoDB Atlas database to Supabase PostgreSQL and slowly converting the project into TypeScript
+
+### Other potential ideas
 
 -I want to allow out-of-order actions; Right now all of the filter buttons clear all elements of the form (or profile, in case of database buttons) given by the buttons below them. Also, the Matrix and input fields can be interacted with before all the necessary filters are in place, and clicking the remaining filters will clear the form (and you can't submit without the filters in place). This can get quite annoying as time goes on.
 
