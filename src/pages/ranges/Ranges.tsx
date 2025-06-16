@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Ranges.css";
-import Matrix, {ComboMatrix} from "../../components/matrix/Matrix";
+import Matrix, { ComboMatrix } from "../../components/matrix/Matrix";
 import ButtonArray from "../../components/buttonarray/ButtonArray";
 
 const Ranges = () => {
-
   useEffect(() => {
     console.log("Ranges page update");
   });
@@ -14,7 +13,7 @@ const Ranges = () => {
   //Keys are the collection names
   //Values are connection strings to the collections
 
-  //[key: string]: string is an index signature 
+  //[key: string]: string is an index signature
   type Collection = {
     UTG: string;
     UTG1: string;
@@ -25,7 +24,7 @@ const Ranges = () => {
     BTN: string;
     SB: string;
     BB: string;
-  }
+  };
 
   //Cash database
   const cashCollections: Collection = {
@@ -39,7 +38,7 @@ const Ranges = () => {
     SB: "cashsb",
     BB: "cashbb",
   };
-  
+
   //Tournament database
   const mttCollections: Collection = {
     UTG: "mttutg",
@@ -65,7 +64,7 @@ const Ranges = () => {
     type: string;
     stack: string;
   }
-  
+
   //The state for the form structure
   const [form, setForm] = useState<Profile>({
     profilename: "",
@@ -90,19 +89,175 @@ const Ranges = () => {
   //It should only ever be 0, 1 or 2.
 
   const [active, setActive] = useState<ComboMatrix>({
-    "AA": 0, "AKs": 0, "AQs": 0, "AJs": 0, "ATs": 0, "A9s": 0, "A8s": 0, "A7s": 0, "A6s": 0, "A5s": 0, "A4s": 0, "A3s": 0, "A2s": 0,
-    "AKo": 0, "KK": 0, "KQs": 0, "KJs": 0, "KTs": 0, "K9s": 0, "K8s": 0, "K7s": 0, "K6s": 0, "K5s": 0, "K4s": 0, "K3s": 0, "K2s": 0,
-    "AQo": 0, "KQo": 0, "QQ": 0, "QJs": 0, "QTs": 0, "Q9s": 0, "Q8s": 0, "Q7s": 0, "Q6s": 0, "Q5s": 0, "Q4s": 0, "Q3s": 0, "Q2s": 0,
-    "AJo": 0, "KJo": 0, "QJo": 0, "JJ": 0, "JTs": 0, "J9s": 0, "J8s": 0, "J7s": 0, "J6s": 0, "J5s": 0, "J4s": 0, "J3s": 0, "J2s": 0,
-    "ATo": 0, "KTo": 0, "QTo": 0, "JTo": 0, "TT": 0, "T9s": 0, "T8s": 0, "T7s": 0, "T6s": 0, "T5s": 0, "T4s": 0, "T3s": 0, "T2s": 0,
-    "A9o": 0, "K9o": 0, "Q9o": 0, "J9o": 0, "T9o": 0, "99": 0, "98s": 0, "97s": 0, "96s": 0, "95s": 0, "94s": 0, "93s": 0, "92s": 0,
-    "A8o": 0, "K8o": 0, "Q8o": 0, "J8o": 0, "T8o": 0, "98o": 0, "88": 0, "87s": 0, "86s": 0, "85s": 0, "84s": 0, "83s": 0, "82s": 0,
-    "A7o": 0, "K7o": 0, "Q7o": 0, "J7o": 0, "T7o": 0, "97o": 0, "87o": 0, "77": 0, "76s": 0, "75s": 0, "74s": 0, "73s": 0, "72s": 0,
-    "A6o": 0, "K6o": 0, "Q6o": 0, "J6o": 0, "T6o": 0, "96o": 0, "86o": 0, "76o": 0, "66": 0, "65s": 0, "64s": 0, "63s": 0, "62s": 0,
-    "A5o": 0, "K5o": 0, "Q5o": 0, "J5o": 0, "T5o": 0, "95o": 0, "85o": 0, "75o": 0, "65o": 0, "55": 0, "54s": 0, "53s": 0, "52s": 0,
-    "A4o": 0, "K4o": 0, "Q4o": 0, "J4o": 0, "T4o": 0, "94o": 0, "84o": 0, "74o": 0, "64o": 0, "54o": 0, "44": 0, "43s": 0, "42s": 0,
-    "A3o": 0, "K3o": 0, "Q3o": 0, "J3o": 0, "T3o": 0, "93o": 0, "83o": 0, "73o": 0, "63o": 0, "53o": 0, "43o": 0, "33": 0, "32s": 0,
-    "A2o": 0, "K2o": 0, "Q2o": 0, "J2o": 0, "T2o": 0, "92o": 0, "82o": 0, "72o": 0, "62o": 0, "52o": 0, "42o": 0, "32o": 0, "22": 0,
+    AA: 0,
+    AKs: 0,
+    AQs: 0,
+    AJs: 0,
+    ATs: 0,
+    A9s: 0,
+    A8s: 0,
+    A7s: 0,
+    A6s: 0,
+    A5s: 0,
+    A4s: 0,
+    A3s: 0,
+    A2s: 0,
+    AKo: 0,
+    KK: 0,
+    KQs: 0,
+    KJs: 0,
+    KTs: 0,
+    K9s: 0,
+    K8s: 0,
+    K7s: 0,
+    K6s: 0,
+    K5s: 0,
+    K4s: 0,
+    K3s: 0,
+    K2s: 0,
+    AQo: 0,
+    KQo: 0,
+    QQ: 0,
+    QJs: 0,
+    QTs: 0,
+    Q9s: 0,
+    Q8s: 0,
+    Q7s: 0,
+    Q6s: 0,
+    Q5s: 0,
+    Q4s: 0,
+    Q3s: 0,
+    Q2s: 0,
+    AJo: 0,
+    KJo: 0,
+    QJo: 0,
+    JJ: 0,
+    JTs: 0,
+    J9s: 0,
+    J8s: 0,
+    J7s: 0,
+    J6s: 0,
+    J5s: 0,
+    J4s: 0,
+    J3s: 0,
+    J2s: 0,
+    ATo: 0,
+    KTo: 0,
+    QTo: 0,
+    JTo: 0,
+    TT: 0,
+    T9s: 0,
+    T8s: 0,
+    T7s: 0,
+    T6s: 0,
+    T5s: 0,
+    T4s: 0,
+    T3s: 0,
+    T2s: 0,
+    A9o: 0,
+    K9o: 0,
+    Q9o: 0,
+    J9o: 0,
+    T9o: 0,
+    "99": 0,
+    "98s": 0,
+    "97s": 0,
+    "96s": 0,
+    "95s": 0,
+    "94s": 0,
+    "93s": 0,
+    "92s": 0,
+    A8o: 0,
+    K8o: 0,
+    Q8o: 0,
+    J8o: 0,
+    T8o: 0,
+    "98o": 0,
+    "88": 0,
+    "87s": 0,
+    "86s": 0,
+    "85s": 0,
+    "84s": 0,
+    "83s": 0,
+    "82s": 0,
+    A7o: 0,
+    K7o: 0,
+    Q7o: 0,
+    J7o: 0,
+    T7o: 0,
+    "97o": 0,
+    "87o": 0,
+    "77": 0,
+    "76s": 0,
+    "75s": 0,
+    "74s": 0,
+    "73s": 0,
+    "72s": 0,
+    A6o: 0,
+    K6o: 0,
+    Q6o: 0,
+    J6o: 0,
+    T6o: 0,
+    "96o": 0,
+    "86o": 0,
+    "76o": 0,
+    "66": 0,
+    "65s": 0,
+    "64s": 0,
+    "63s": 0,
+    "62s": 0,
+    A5o: 0,
+    K5o: 0,
+    Q5o: 0,
+    J5o: 0,
+    T5o: 0,
+    "95o": 0,
+    "85o": 0,
+    "75o": 0,
+    "65o": 0,
+    "55": 0,
+    "54s": 0,
+    "53s": 0,
+    "52s": 0,
+    A4o: 0,
+    K4o: 0,
+    Q4o: 0,
+    J4o: 0,
+    T4o: 0,
+    "94o": 0,
+    "84o": 0,
+    "74o": 0,
+    "64o": 0,
+    "54o": 0,
+    "44": 0,
+    "43s": 0,
+    "42s": 0,
+    A3o: 0,
+    K3o: 0,
+    Q3o: 0,
+    J3o: 0,
+    T3o: 0,
+    "93o": 0,
+    "83o": 0,
+    "73o": 0,
+    "63o": 0,
+    "53o": 0,
+    "43o": 0,
+    "33": 0,
+    "32s": 0,
+    A2o: 0,
+    K2o: 0,
+    Q2o: 0,
+    J2o: 0,
+    T2o: 0,
+    "92o": 0,
+    "82o": 0,
+    "72o": 0,
+    "62o": 0,
+    "52o": 0,
+    "42o": 0,
+    "32o": 0,
+    "22": 0,
   });
 
   /*The different play positions, stack sizes and range types. 
@@ -147,35 +302,188 @@ const Ranges = () => {
 
   /*States to show/hide debug functions checkLocation and checkStatus.
   I could put in a button for this inside the page, but I don't think that's good. */
-  const [d_bug, ] = useState<boolean>(false);
+  const [d_bug] = useState<boolean>(false);
 
   //A function to empty a matrix (set the active of all combos to 0)
   const clearMatrix = () => {
     setActive({
-      "AA": 0, "AKs": 0, "AQs": 0, "AJs": 0, "ATs": 0, "A9s": 0, "A8s": 0, "A7s": 0, "A6s": 0, "A5s": 0, "A4s": 0, "A3s": 0, "A2s": 0,
-      "AKo": 0, "KK": 0, "KQs": 0, "KJs": 0, "KTs": 0, "K9s": 0, "K8s": 0, "K7s": 0, "K6s": 0, "K5s": 0, "K4s": 0, "K3s": 0, "K2s": 0,
-      "AQo": 0, "KQo": 0, "QQ": 0, "QJs": 0, "QTs": 0, "Q9s": 0, "Q8s": 0, "Q7s": 0, "Q6s": 0, "Q5s": 0, "Q4s": 0, "Q3s": 0, "Q2s": 0,
-      "AJo": 0, "KJo": 0, "QJo": 0, "JJ": 0, "JTs": 0, "J9s": 0, "J8s": 0, "J7s": 0, "J6s": 0, "J5s": 0, "J4s": 0, "J3s": 0, "J2s": 0,
-      "ATo": 0, "KTo": 0, "QTo": 0, "JTo": 0, "TT": 0, "T9s": 0, "T8s": 0, "T7s": 0, "T6s": 0, "T5s": 0, "T4s": 0, "T3s": 0, "T2s": 0,
-      "A9o": 0, "K9o": 0, "Q9o": 0, "J9o": 0, "T9o": 0, "99": 0, "98s": 0, "97s": 0, "96s": 0, "95s": 0, "94s": 0, "93s": 0, "92s": 0,
-      "A8o": 0, "K8o": 0, "Q8o": 0, "J8o": 0, "T8o": 0, "98o": 0, "88": 0, "87s": 0, "86s": 0, "85s": 0, "84s": 0, "83s": 0, "82s": 0,
-      "A7o": 0, "K7o": 0, "Q7o": 0, "J7o": 0, "T7o": 0, "97o": 0, "87o": 0, "77": 0, "76s": 0, "75s": 0, "74s": 0, "73s": 0, "72s": 0,
-      "A6o": 0, "K6o": 0, "Q6o": 0, "J6o": 0, "T6o": 0, "96o": 0, "86o": 0, "76o": 0, "66": 0, "65s": 0, "64s": 0, "63s": 0, "62s": 0,
-      "A5o": 0, "K5o": 0, "Q5o": 0, "J5o": 0, "T5o": 0, "95o": 0, "85o": 0, "75o": 0, "65o": 0, "55": 0, "54s": 0, "53s": 0, "52s": 0,
-      "A4o": 0, "K4o": 0, "Q4o": 0, "J4o": 0, "T4o": 0, "94o": 0, "84o": 0, "74o": 0, "64o": 0, "54o": 0, "44": 0, "43s": 0, "42s": 0,
-      "A3o": 0, "K3o": 0, "Q3o": 0, "J3o": 0, "T3o": 0, "93o": 0, "83o": 0, "73o": 0, "63o": 0, "53o": 0, "43o": 0, "33": 0, "32s": 0,
-      "A2o": 0, "K2o": 0, "Q2o": 0, "J2o": 0, "T2o": 0, "92o": 0, "82o": 0, "72o": 0, "62o": 0, "52o": 0, "42o": 0, "32o": 0, "22": 0,
+      AA: 0,
+      AKs: 0,
+      AQs: 0,
+      AJs: 0,
+      ATs: 0,
+      A9s: 0,
+      A8s: 0,
+      A7s: 0,
+      A6s: 0,
+      A5s: 0,
+      A4s: 0,
+      A3s: 0,
+      A2s: 0,
+      AKo: 0,
+      KK: 0,
+      KQs: 0,
+      KJs: 0,
+      KTs: 0,
+      K9s: 0,
+      K8s: 0,
+      K7s: 0,
+      K6s: 0,
+      K5s: 0,
+      K4s: 0,
+      K3s: 0,
+      K2s: 0,
+      AQo: 0,
+      KQo: 0,
+      QQ: 0,
+      QJs: 0,
+      QTs: 0,
+      Q9s: 0,
+      Q8s: 0,
+      Q7s: 0,
+      Q6s: 0,
+      Q5s: 0,
+      Q4s: 0,
+      Q3s: 0,
+      Q2s: 0,
+      AJo: 0,
+      KJo: 0,
+      QJo: 0,
+      JJ: 0,
+      JTs: 0,
+      J9s: 0,
+      J8s: 0,
+      J7s: 0,
+      J6s: 0,
+      J5s: 0,
+      J4s: 0,
+      J3s: 0,
+      J2s: 0,
+      ATo: 0,
+      KTo: 0,
+      QTo: 0,
+      JTo: 0,
+      TT: 0,
+      T9s: 0,
+      T8s: 0,
+      T7s: 0,
+      T6s: 0,
+      T5s: 0,
+      T4s: 0,
+      T3s: 0,
+      T2s: 0,
+      A9o: 0,
+      K9o: 0,
+      Q9o: 0,
+      J9o: 0,
+      T9o: 0,
+      "99": 0,
+      "98s": 0,
+      "97s": 0,
+      "96s": 0,
+      "95s": 0,
+      "94s": 0,
+      "93s": 0,
+      "92s": 0,
+      A8o: 0,
+      K8o: 0,
+      Q8o: 0,
+      J8o: 0,
+      T8o: 0,
+      "98o": 0,
+      "88": 0,
+      "87s": 0,
+      "86s": 0,
+      "85s": 0,
+      "84s": 0,
+      "83s": 0,
+      "82s": 0,
+      A7o: 0,
+      K7o: 0,
+      Q7o: 0,
+      J7o: 0,
+      T7o: 0,
+      "97o": 0,
+      "87o": 0,
+      "77": 0,
+      "76s": 0,
+      "75s": 0,
+      "74s": 0,
+      "73s": 0,
+      "72s": 0,
+      A6o: 0,
+      K6o: 0,
+      Q6o: 0,
+      J6o: 0,
+      T6o: 0,
+      "96o": 0,
+      "86o": 0,
+      "76o": 0,
+      "66": 0,
+      "65s": 0,
+      "64s": 0,
+      "63s": 0,
+      "62s": 0,
+      A5o: 0,
+      K5o: 0,
+      Q5o: 0,
+      J5o: 0,
+      T5o: 0,
+      "95o": 0,
+      "85o": 0,
+      "75o": 0,
+      "65o": 0,
+      "55": 0,
+      "54s": 0,
+      "53s": 0,
+      "52s": 0,
+      A4o: 0,
+      K4o: 0,
+      Q4o: 0,
+      J4o: 0,
+      T4o: 0,
+      "94o": 0,
+      "84o": 0,
+      "74o": 0,
+      "64o": 0,
+      "54o": 0,
+      "44": 0,
+      "43s": 0,
+      "42s": 0,
+      A3o: 0,
+      K3o: 0,
+      Q3o: 0,
+      J3o: 0,
+      T3o: 0,
+      "93o": 0,
+      "83o": 0,
+      "73o": 0,
+      "63o": 0,
+      "53o": 0,
+      "43o": 0,
+      "33": 0,
+      "32s": 0,
+      A2o: 0,
+      K2o: 0,
+      Q2o: 0,
+      J2o: 0,
+      T2o: 0,
+      "92o": 0,
+      "82o": 0,
+      "72o": 0,
+      "62o": 0,
+      "52o": 0,
+      "42o": 0,
+      "32o": 0,
+      "22": 0,
     });
-    
-    setForm((
-      (prev) => {
-      return { ...prev, range: {raise: [], call: []} };
-    }
-    ));
 
+    setForm((prev) => {
+      return { ...prev, range: { raise: [], call: [] } };
+    });
   };
-  
-  //A function to empty out all form elements and profileId, rangetype and stack states. 
+
+  //A function to empty out all form elements and profileId, rangetype and stack states.
   const clearForm = () => {
     clearMatrix();
 
@@ -200,7 +508,6 @@ const Ranges = () => {
 
     setEdit(false);
     setDel(false);
-
   };
 
   /*A function to empty (but not delete) the currently open 
@@ -238,11 +545,22 @@ const Ranges = () => {
 
   //Sets the stack size to the filter button id
   const handleStack = (event: React.MouseEvent<HTMLDivElement>) => {
-    clearForm();
-    console.log(event.currentTarget.id);
-    setStack(event.currentTarget.id);
-    updateForm({ stack: event.currentTarget.id });
-    setStackToggle(event.currentTarget.id);
+    if (!event) {
+      console.error("Event is null or undefined");
+      return;
+    }
+    const eTarget = event.currentTarget;
+
+    if (!eTarget.id) {
+      console.error("Event target has no Id");
+      return;
+    }
+
+    clearForm(); //Clears existing form information
+    console.log(eTarget.id);
+    setStack(eTarget.id);
+    updateForm({ stack: eTarget.id });
+    setStackToggle(eTarget.id);
   };
 
   /*Declares a variable to hold the initial connection string.
@@ -251,34 +569,49 @@ const Ranges = () => {
 
   //Function to open position data (BB, SB...) inside a database (MTT or Cash)
   const handleCollection = async (event: React.MouseEvent<HTMLDivElement>) => {
-    clearForm(); //Clears existing form information
+    if (!event) {
+      console.error("Event is null or undefined");
+      return;
+    }
+    const eTarget = event.currentTarget;
 
-    console.log(event.currentTarget.id);
+    if (!eTarget.id) {
+      console.error("Event target has no Id");
+      return;
+    }
+    clearForm();
+
+    console.log(eTarget.id);
 
     if (location.database === "Cash") {
       //If the open game type is "Cash"
 
       //Sets location state to show which collection (connection string) is open
       setLocation((prev) => {
-        return { ...prev, collection: cashCollections[event.currentTarget.id as keyof Collection] };
+        return {
+          ...prev,
+          collection: cashCollections[eTarget.id as keyof Collection],
+        };
       });
       //Also updates destination variable for fetch
-      destination = cashCollections[event.currentTarget.id as keyof Collection];
+      destination = cashCollections[eTarget.id as keyof Collection];
       /*Even if the connection string state can't be used in this function,
       I still want to set it and use it later */
-      setConnString(cashCollections[event.currentTarget.id as keyof Collection]);
+      setConnString(cashCollections[eTarget.id as keyof Collection]);
 
       console.log(location.database);
-
     } else if (location.database === "Tournament") {
       //Else if the open database is "Tournament"
       setLocation((prev) => {
-        return { ...prev, collection: mttCollections[event.currentTarget.id as keyof Collection] };
+        return {
+          ...prev,
+          collection: mttCollections[eTarget.id as keyof Collection],
+        };
       });
 
-      destination = mttCollections[event.currentTarget.id as keyof Collection];
+      destination = mttCollections[eTarget.id as keyof Collection];
 
-      setConnString(mttCollections[event.currentTarget.id as keyof Collection]);
+      setConnString(mttCollections[eTarget.id as keyof Collection]);
 
       console.log(location.database);
     } else {
@@ -321,12 +654,11 @@ const Ranges = () => {
 
     //Sets location.position to the clicked button.
     setLocation((prev) => {
-      return { ...prev, position: event.currentTarget.id };
+      return { ...prev, position: eTarget.id };
     });
     //And sets toggle to show the open collection.
-    setCollectionToggle(event.currentTarget.id);
+    setCollectionToggle(eTarget.id);
   };
-
 
   //Two functions to help debug.
   //Shows open database, open position, available profiles, active toggles and the current connection string.
@@ -338,7 +670,7 @@ const Ranges = () => {
     console.log(`Type toggle: ${JSON.stringify(typeToggle)}`);
     console.log(`Connection string: ${connString}`);
   };
-  
+
   //Shows current profile id, if edit is toggled, the current form and current active states.
   const checkStatus = () => {
     console.log(`Profile ID: ${profileId}`);
@@ -352,8 +684,18 @@ const Ranges = () => {
   //For example, attaching a listener to a div that has a button child makes event.target (button) and event.currentTarget(div with listener) different.
   //Using currentTarget isn't always possible so TypeScript also accepts specified typing for the HTMLElement(const asd = event.currentTarget as HTMLDivElement).
   const handleType = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!event) {
+      console.error("Event is null or undefined");
+      return;
+    }
+    const eTarget = event.currentTarget;
+
+    if (!eTarget.id) {
+      console.error("Event target has no Id");
+      return;
+    }
     clearMatrix();
-    console.log(event.currentTarget.id);
+    console.log(eTarget.id);
     setForm((prev) => {
       return {
         ...prev,
@@ -368,11 +710,11 @@ const Ranges = () => {
     });
     setProfileId("");
 
-    setRangetype(event.currentTarget.id);
+    setRangetype(eTarget.id);
 
-    updateForm({ type: event.currentTarget.id });
+    updateForm({ type: eTarget.id });
 
-    setTypeToggle(event.currentTarget.id);
+    setTypeToggle(eTarget.id);
 
     setEdit(false);
     setDel(false);
@@ -442,9 +784,9 @@ const Ranges = () => {
           setActive((prev) => {
             return { ...prev, [value[i]]: 2 };
           });
-        };
-      };
-    };
+        }
+      }
+    }
     //Sets the form to what it finds.
     setForm({
       profilename: profile_object.profilename,
@@ -467,23 +809,33 @@ const Ranges = () => {
 
   //Handles RangeButton onClicks to change colors.
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!event) {
+      console.error("Event is null or undefined");
+      return;
+    }
+    const eTarget = event.currentTarget;
+
+    if (!eTarget.id) {
+      console.error("Event target has no Id");
+      return;
+    }
     console.log("Button clicked");
-    console.log(event.currentTarget.id);
+    console.log(eTarget.id);
     //Sets buttonId to later include hand combo to form.
-    setButtonId(event.currentTarget.id);
+    setButtonId(eTarget.id);
     //Sets active from 0 to 1, 1 to 2 or 2 to 0 when clicked.
     setActive((prev) => {
       const newActive = { ...prev };
       //Stores the current id of the clicked button.
-      const currentEventValue = active[event.currentTarget.id];
+      const currentEventValue = active[eTarget.id];
 
       //Sets the id of the clicked button to the next, in order 0, 1, 2, 0.
       if (currentEventValue === 0) {
-        newActive[event.currentTarget.id] = 1;
+        newActive[eTarget.id] = 1;
       } else if (currentEventValue === 1) {
-        newActive[event.currentTarget.id] = 2;
+        newActive[eTarget.id] = 2;
       } else {
-        newActive[event.currentTarget.id] = 0;
+        newActive[eTarget.id] = 0;
       }
 
       return newActive;
@@ -505,7 +857,7 @@ const Ranges = () => {
           },
         };
       } else if (active[buttonId] === 2) {
-      /*If buttonId is 2; 
+        /*If buttonId is 2; 
         includes it in Raise range and removes it from Call range */
         return {
           ...prev,
@@ -515,7 +867,7 @@ const Ranges = () => {
           },
         };
       } else {
-      /*If buttonId is 0 (it can't be anything else at this point), 
+        /*If buttonId is 0 (it can't be anything else at this point), 
         removes it from both ranges */
         return {
           ...prev,
@@ -528,7 +880,6 @@ const Ranges = () => {
     });
   };
 
-  
   //Toggles for the ability to edit and delete profiles.
   const toggleEdit = () => {
     setEdit(!edit);
@@ -678,7 +1029,9 @@ const Ranges = () => {
             className="db-btn"
             tabIndex={0}
             style={
-              dbToggle === "Cash" ? { backgroundColor: "chartreuse", color: "black" } : undefined
+              dbToggle === "Cash"
+                ? { backgroundColor: "chartreuse", color: "black" }
+                : undefined
             }
             onClick={() => handleDatabase("Cash")}
           >
@@ -688,7 +1041,9 @@ const Ranges = () => {
             className="db-btn"
             tabIndex={0}
             style={
-              dbToggle === "Tournament" ? { backgroundColor: "chartreuse", color: "black" } : undefined
+              dbToggle === "Tournament"
+                ? { backgroundColor: "chartreuse", color: "black" }
+                : undefined
             }
             onClick={() => handleDatabase("Tournament")}
           >
@@ -768,7 +1123,7 @@ const Ranges = () => {
       ) : null}
 
       {/* If all three of position, stack size and rangetype exist, show profile list. */}
-      {location.position !== "" && stack !== ""  && rangetype !== "" ? (
+      {location.position !== "" && stack !== "" && rangetype !== "" ? (
         <div>{profileList()}</div>
       ) : null}
 
@@ -898,7 +1253,9 @@ const Ranges = () => {
             tabIndex={0}
             className="edit-btn"
             style={
-              edit ? { backgroundColor: "chartreuse", color: "black" } : undefined
+              edit
+                ? { backgroundColor: "chartreuse", color: "black" }
+                : undefined
             }
             onClick={toggleEdit}
           >
