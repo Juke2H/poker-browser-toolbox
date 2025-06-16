@@ -5,7 +5,7 @@ import { MongoClient } from "mongodb";
 
 //Configure .env. I'm not sure if this is necessary since running locally only takes ".env" and not "config.env"
 import { config } from 'dotenv';
-config({ path: './config.env' });
+config();
 
 //Need to import all collections
 import cashBB from "./routes/dbcash/bb.mjs";
@@ -58,7 +58,7 @@ app.use("/mttutg1", mttUTG1);
 app.use("/mttutg", mttUTG);
 
 // Handles browser refreshes
-app.use('*', (req,res) => {
+app.use('/{*splat}', (req,res) => {
   res.sendFile('index.html', { root: 'public' });
 });
 
