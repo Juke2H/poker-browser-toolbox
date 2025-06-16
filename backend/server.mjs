@@ -58,7 +58,7 @@ app.use("/mttutg1", mttUTG1);
 app.use("/mttutg", mttUTG);
 
 // Handles browser refreshes
-app.use('*', (req,res) => {
+app.use('/{*splat}', (req,res) => {
   res.sendFile('index.html', { root: 'public' });
 });
 

@@ -7,10 +7,7 @@ import { MongoClient } from "mongodb";
 const connectionString = process.env.ATLAS_URI || "";
 
 // Create a new instance of the MongoDB client using the connection string
-const client = new MongoClient(connectionString, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const client = new MongoClient(connectionString, { maxPoolSize: 150 });
 
 // Declare a variable to hold the database connection
 let connCash;
