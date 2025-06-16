@@ -45,7 +45,7 @@ Instructions on how to create your connection string can be found here: https://
 Run build to generate static files:
 ```
 npm install
-npm run build
+npx vite build
 ```
 
 Copy the generated build directory to backend for express:
