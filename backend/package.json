@@ -10,9 +10,13 @@
   "author": "JH",
   "license": "MIT",
   "dependencies": {
+    "@supabase/supabase-js": "^2.50.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mongodb": "^6.17.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.3"
   }
 }
