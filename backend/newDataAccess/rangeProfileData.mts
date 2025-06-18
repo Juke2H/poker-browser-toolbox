@@ -11,7 +11,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import {
   NewRangeProfile,
   RangeProfileRow,
-  RawProfileRow,
+  RawProfileRange,
 } from "./rangeProfileInterface.mts";
 
 //A class for profile data access
@@ -28,7 +28,23 @@ export class rangeProfileQueries {
   async fetchAllTemplates(): Promise<any> {
     const { data, error } = await this.database
       .from("range_profiles")
-      .select()
+      .select(
+        `
+    id,
+    profile_name,
+    description,
+    range_type,
+    game_type,
+    stack_size,
+    position,
+    is_template,
+    owner_id,
+    profile_combos (
+      combo,
+      play
+    )
+    `
+      )
       .is("is_template", true);
     if (error) {
       throw error;
@@ -62,6 +78,7 @@ export class rangeProfileQueries {
       .from("range_profiles")
       .select(
         `
+    id,
     profile_name,
     description,
     range_type,

@@ -14,11 +14,12 @@ export type RangeProfileRow = {
   is_template: boolean;
   owner_id: string | null;
   created_at: string;
+  profile_combos?: Array<RawProfileRange>;
 };
 
-export type RawProfileRow = RangeProfileRow & {
+export type RawProfileRange = {
   combo: string;
-  play: 'call' | 'raise';
+  play: "call" | "raise";
 };
 
 // Type for inserting/updating:
