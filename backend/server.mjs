@@ -2,10 +2,9 @@ import express from "express";
 import cors from "cors";
 import "./loadEnvironment.mjs";
 import { MongoClient } from "mongodb";
-
-//Configure .env. I'm not sure if this is necessary since running locally only takes ".env" and not "config.env"
 import { config } from 'dotenv';
-config({ path: './config.env' });
+
+config();
 
 //Need to import all collections
 import cashBB from "./routes/dbcash/bb.mjs";
