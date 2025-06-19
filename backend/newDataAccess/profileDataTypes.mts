@@ -33,3 +33,6 @@ export type NewRangeProfile = {
   is_template: boolean;
   owner_id: string | null;
 };
+
+// Type for functions reliant on game type
+export type GameTypes = "all" | "cash" | "tournament";

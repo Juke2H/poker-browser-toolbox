@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { Database } from "./supabase";
 import { config } from "dotenv";
-import { rangeProfileQueries } from "../newDataAccess/rangeProfileData.mts";
+import { profileSelect } from "../newDataAccess/profileSelect.mts";
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 
@@ -25,4 +25,4 @@ const supabase = createClient<Database>(
 );
 
 // Initializes a supabase client with range profile data queries imported
-export const rangeProfileRepository = new rangeProfileQueries(supabase);
+export const profileSelectRepository = new profileSelect(supabase);
