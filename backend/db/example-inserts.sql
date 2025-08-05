@@ -1,4 +1,4 @@
--- Insert the master hand list / matrix --
+-- Insert the master hand list / matrix
 INSERT INTO
     hand_combos (combo_name)
 VALUES
@@ -173,7 +173,7 @@ VALUES
     ('22') 
 ON CONFLICT DO NOTHING; -- If an exception is raised, do nothing
 
--- Create an example raw JSONB value --
+-- Create an example raw JSONB value
 INSERT INTO raw_ranges (doc) VALUES
     ('{
     "profilename": "Example F3Bet",
@@ -190,7 +190,7 @@ INSERT INTO raw_ranges (doc) VALUES
     "owner_id": null
     }'::jsonb);
 
--- Convert and insert data from JSONB to relational --
+-- Convert and insert data from JSONB to relational
 INSERT INTO range_profiles (
     profile_name,
     description,
@@ -211,7 +211,7 @@ SELECT
 FROM raw_ranges
 ON CONFLICT DO NOTHING;
 
--- Give each profile their ranges --
+-- Give each profile their ranges
 INSERT INTO profile_combos (profile_id, combo, play)
 SELECT DISTINCT
     rp.id,

@@ -36,16 +36,18 @@ export type ProfileTypes = {
   gameType: string;
   stackSize: string;
   position: string;
-  isTemplate: boolean;
-  ownerId: string | null;
+  isTemplate?: boolean;
+  ownerId?: string | null;
   range?: ProfileRanges;
 };
 
 // Parses fetched templates
 // No class needed because service functions do not maintain a state/instance/class/etc
-export async function parseTemplates(templateFunc: (gameType: GameTypes) => Promise<Array<RangeProfileRow>>, gameType: GameTypes): Promise<Array<ProfileTypes>> {
-  const templates =
-    await templateFunc(gameType);
+export async function parseTemplates(
+  templateFunc: (gameType: GameTypes) => Promise<Array<RangeProfileRow>>,
+  gameType: GameTypes
+): Promise<Array<ProfileTypes>> {
+  const templates = await templateFunc(gameType);
 
   if (templates.length === 0) {
     throw new Error("Templates not found");
@@ -60,8 +62,6 @@ export async function parseTemplates(templateFunc: (gameType: GameTypes) => Prom
       game_type: gameType,
       stack_size: stackSize,
       position,
-      is_template: isTemplate,
-      owner_id: ownerId,
     } = template;
 
     //If the profile doesn't have combos, skip the rest
@@ -77,8 +77,6 @@ export async function parseTemplates(templateFunc: (gameType: GameTypes) => Prom
         gameType,
         stackSize,
         position,
-        isTemplate,
-        ownerId,
       };
     }
 
@@ -101,8 +99,6 @@ export async function parseTemplates(templateFunc: (gameType: GameTypes) => Prom
       gameType,
       stackSize,
       position,
-      isTemplate,
-      ownerId,
       range: parsedCombos,
     };
   });
@@ -110,61 +106,69 @@ export async function parseTemplates(templateFunc: (gameType: GameTypes) => Prom
   return parsedTemplates;
 }
 
-export async function parseProfile(profileId: string): Promise<ProfileTypes> {
-  const rows: Array<RangeProfileRow> = await profileSelectRepository.selectById(
-    profileId
-  );
+export async function parseProfiles(
+  profileFunc: (
+    ownerId: string | undefined,
+    gameType: GameTypes
+  ) => Promise<Array<RangeProfileRow>>,
+  gameType: GameTypes,
+  ownerId: string | undefined
+): Promise<Array<ProfileTypes>> {
+  const profiles = await profileFunc(ownerId, gameType);
 
-  //Check if profile was found
-  if (rows.length === 0) {
-    throw new Error("Profile not found");
+  if (profiles.length === 0) {
+    throw new Error("Templates not found");
   }
 
-  //Takes the Raw Profile Row, destructures and assigns the keys to local variables in camelCase
-  const {
-    id: _id,
-    profile_name: profileName,
-    description,
-    range_type: rangeType,
-    game_type: gameType,
-    stack_size: stackSize,
-    position,
-    is_template: isTemplate,
-    owner_id: ownerId,
-  } = rows[0];
+  const parsedProfiles: Array<ProfileTypes> = profiles.map((profile) => {
+    const {
+      id: _id,
+      profile_name: profileName,
+      description,
+      range_type: rangeType,
+      game_type: gameType,
+      stack_size: stackSize,
+      position,
+    } = profile;
 
-  const parsedProfileRow: ProfileTypes = {
-    _id,
-    profileName,
-    description,
-    rangeType,
-    gameType,
-    stackSize,
-    position,
-    isTemplate,
-    ownerId,
-  };
+    //If the profile doesn't have combos, skip the rest
+    if (!profile.profile_combos) {
+      console.warn(`Missing combos for template ID: ${profile.id}`);
 
-  return parsedProfileRow;
+      //Return written open both for readability and to transform Types
+      return {
+        _id,
+        profileName,
+        description,
+        rangeType,
+        gameType,
+        stackSize,
+        position,
+      };
+    }
+
+    const parsedCombos: ProfileRanges = {
+      call: [],
+      raise: [],
+    };
+
+    // A destructured parameter assigns variables combo and play to the values that match those keys
+    profile.profile_combos.forEach(({ combo, play }) => {
+      parsedCombos[play].push(combo);
+    });
+
+    // Written open to transform Types
+    return {
+      _id,
+      profileName,
+      description,
+      rangeType,
+      gameType,
+      stackSize,
+      position,
+      range: parsedCombos,
+    };
+  });
+  console.log(parsedProfiles);
+  return parsedProfiles;
 }
-
-// The return is an array with objects representing rows
-// The return needs to be JSON.stringify'd
-export async function parsedProfileWithRanges(
-  profileId: string
-): Promise<ProfileTypes> {
-  const rows: Array<RangeProfileRow> =
-    await profileSelectRepository.selectWithCombos(profileId);
-
-  //Check if profile was found
-  if (rows.length === 0) {
-    throw new Error("Profile not found");
-  }
-  //
-}
-
-export async function parseRanges(profileId: string): Promise<ProfileRanges> {
-  //
-}
-
-// Should Insert/Update/Delete functions be here too?
