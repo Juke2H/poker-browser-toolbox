@@ -11,7 +11,7 @@ router.all('{*splat}', requireAuthentication)
 router.all('{*splat}', loadUser)
 */
 
-router.get("/profile/:id", async (request, response) => {
+router.get("/profile/:id", async (request, response, next) => {
   try {
     const profilesById = parseProfiles(
       profileSelectRepository.selectById.bind(profileSelectRepository),
@@ -19,12 +19,12 @@ router.get("/profile/:id", async (request, response) => {
       request.params.id
     );
     return profilesById;
-  } catch (e) {
-    //
+  } catch (error) {
+    next(error); // Next(error) sends the error along to a receiving error handle middleware
   }
 });
 
-router.get("/tournamentprofile/:id", async (request, response) => {
+router.get("/tournamentprofile/:id", async (request, response, next) => {
   try {
     const profilesById = parseProfiles(
       profileSelectRepository.selectById.bind(profileSelectRepository),
@@ -32,12 +32,12 @@ router.get("/tournamentprofile/:id", async (request, response) => {
       request.params.id
     );
     return profilesById;
-  } catch (e) {
-    //
+  } catch (error) {
+    next(error);
   }
 });
 
-router.get("/cashprofile/:id", async (request, response) => {
+router.get("/cashprofile/:id", async (request, response, next) => {
   try {
     const profilesById = parseProfiles(
       profileSelectRepository.selectById.bind(profileSelectRepository),
@@ -45,38 +45,90 @@ router.get("/cashprofile/:id", async (request, response) => {
       request.params.id
     );
     return profilesById;
-  } catch (e) {
-    //
+  } catch (error) {
+    next(error);
   }
 });
 
-router.post("/tournamentprofile/:id", async (request, response) => {
+// This is likely going to be for empty, or newly created, profiles
+router.post("/profile/:id", async (request, response, next) => {
   try {
     //
-  } catch (e) {
+  } catch (error) {
+    next(error);
+  }
+});
+
+// And these fill out the ranges
+// Might want to use PATCH for that, though
+router.post("/tournamentprofile/:id", async (request, response, next) => {
+  try {
     //
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/cashprofile/:id", async (request, response, next) => {
+  try {
+    //
+  } catch (error) {
+    next(error);
   }
 });
 
 // HTTP PATCH is used to update the entity, PUT replaces it entirely
 // Using PUT like PATCH would need the entire entity to be sent regardless of how much of it is altered
 // PATCH requires only the alterations
-router.patch("/profile/:id", async (request, response) => {
+router.patch("/profile/:id", async (request, response, next) => {
   try {
     //
-  } catch (e) {
-    //
+  } catch (error) {
+    next(error);
   }
 });
 
-router.delete("/profile/:id", async (request, response) => {
+router.patch("/tournamentprofile/:id", async (request, response, next) => {
   try {
     //
-  } catch (e) {
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.patch("/cashprofile/:id", async (request, response, next) => {
+  try {
     //
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Delete entire profile (along with user probably)
+router.delete("/profile/:id", async (request, response, next) => {
+  try {
+    //
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Delete tournament ranges
+router.delete("/tournamentprofile/:id", async (request, response, next) => {
+  try {
+    //
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Delete cash ranges
+router.delete("/cashprofile/:id", async (request, response, next) => {
+  try {
+    //
+  } catch (error) {
+    next(error);
   }
 });
 
 export default router;
-
-// What about users?
