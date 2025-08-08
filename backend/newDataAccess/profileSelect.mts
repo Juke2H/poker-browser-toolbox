@@ -54,7 +54,7 @@ export class profileSelect {
     }
   }
 
-  // Needs gametype conditionals and proper promise type
+  // Fetch range profiles by owner_id (which will equal to userId later)
   // Can't test yet because user auth hasn't been implemented yet
   async selectById(
     ownerId: string | undefined,

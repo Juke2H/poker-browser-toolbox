@@ -5,6 +5,8 @@ import { profileSelect } from "../newDataAccess/profileSelect.mts";
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 
+// fileURLToPath converts file url to path, and import.meta.url is the absolute file url of this module.
+// dirname returns the directory name (and path to it) this module is in
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // This dance with url and path seems to be necessary if .env is in module directory
