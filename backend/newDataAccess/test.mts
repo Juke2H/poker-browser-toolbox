@@ -13,5 +13,5 @@ import {
 // ParseTemplates is the class function, selectTemplates which binds the profileSelect class is templateFunc and "tournament" is gameType
 parseTemplates(
   profileSelectRepository.selectTemplates.bind(profileSelectRepository),
-  "tournament"
+  "all"
 );

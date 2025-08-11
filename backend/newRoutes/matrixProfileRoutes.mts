@@ -18,7 +18,7 @@ router.get("/profile/:id", async (request, response, next) => {
       "all",
       request.params.id
     );
-    return profilesById;
+    response.send(profilesById);
   } catch (error) {
     next(error); // Next(error) sends the error along to a receiving error handle middleware
   }
@@ -31,7 +31,7 @@ router.get("/tournamentprofile/:id", async (request, response, next) => {
       "tournament",
       request.params.id
     );
-    return profilesById;
+    response.send(profilesById);
   } catch (error) {
     next(error);
   }
@@ -44,7 +44,7 @@ router.get("/cashprofile/:id", async (request, response, next) => {
       "cash",
       request.params.id
     );
-    return profilesById;
+    response.send(profilesById);
   } catch (error) {
     next(error);
   }

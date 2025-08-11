@@ -6,13 +6,13 @@ import express from "express";
 const router = express.Router();
 
 //Fetches the template set of ranges
-router.get("/templates", async (request, response, next) => {
+router.get("/alltemplates", async (request, response, next) => {
   try {
     const allTemplates = parseTemplates(
       profileSelectRepository.selectTemplates.bind(profileSelectRepository),
       "all"
     );
-    return allTemplates;
+    response.send(allTemplates);
   } catch (error) {
     next(error);
   }
@@ -24,7 +24,7 @@ router.get("/tournamenttemplates", async (request, response, next) => {
       profileSelectRepository.selectTemplates.bind(profileSelectRepository),
       "tournament"
     );
-    return tournamentTemplates;
+    response.send(tournamentTemplates);
   } catch (error) {
     next(error);
   }
@@ -36,7 +36,7 @@ router.get("/cashtemplates", async (request, response, next) => {
       profileSelectRepository.selectTemplates.bind(profileSelectRepository),
       "cash"
     );
-    return cashTemplates;
+    response.send(cashTemplates);
   } catch (error) {
     next(error);
   }
@@ -46,7 +46,7 @@ router.get("/cashtemplates", async (request, response, next) => {
 // and should most likely not be accessible in front-end.
 
 // Creating a new templates profile shouldn't normally happen, but it's here if it has to
-router.post("/templates", async (request, response, next) => {
+router.post("/alltemplates", async (request, response, next) => {
   try {
     //
   } catch (error) {
@@ -72,7 +72,7 @@ router.post("/cashtemplates", async (request, response, next) => {
 });
 
 // Patching non-ranges might happen sometimes.
-router.patch("/templates", async (request, response, next) => {
+router.patch("/alltemplates", async (request, response, next) => {
   try {
     //
   } catch (error) {
@@ -98,7 +98,7 @@ router.patch("/cashtemplates", async (request, response, next) => {
 });
 
 // Just in case the whole thing needs to be erased
-router.delete("/templates", async (request, response, next) => {
+router.delete("/alltemplates", async (request, response, next) => {
   try {
     //
   } catch (error) {
