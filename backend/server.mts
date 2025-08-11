@@ -31,6 +31,9 @@ server.use('/{*splat}', (request, response) => {
   response.sendFile('index.html', { root: 'public' });
 });
 
+// Handles errors that call next()
+server.use(errorHandler);
+
 // Start server and handle errors if it doesn't
 server.listen(PORT, async () => {
   try {
