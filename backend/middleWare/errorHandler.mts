@@ -17,23 +17,27 @@ const errorHandler = (error, request, response, next) => {
     return next(error);
   }
 
-  // Custom error handling logic for AppError and later others maybe
-  // Handle AppError
+  // Handling logic for custom thrown AppErrors
   if (error instanceof AppError) {
-    return response.status(error.statusCode).json({
+    const errorResponse: {
+      status: string;
+      // code: string;
+      message: string;
+      details?: Record<string, any>;
+      requestId: string | string[] | undefined;
+    } = {
       status: "error",
+      // code: error.code,
       message: error.message,
-      ...(error.details && { details: error.details }),
-      requestId: request.headers["x-request-id"],
-    });
-  }
+      requestId: request.headers["x-request-id"]
+    };
 
-  // Unknown error handling
-  return response.status(500).json({
-    status: "error",
-    message: "An unexpected error occurred",
-    requestId: request.headers["x-request-id"],
-  });
+    if (error.details) {
+      errorResponse.details = error.details;
+    }
+
+    return response.status(error.statusCode).json(errorResponse);
+  }
 };
 
 export default errorHandler;

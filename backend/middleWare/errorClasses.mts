@@ -7,13 +7,13 @@ export class AppError extends Error {
     public statusCode: number,
     public message: string,
     options?: {
-      //code?: string,
+      // code?: string,
       details?: Record<string, any>;
     }
   ) {
     super(message);
     this.name = "AppError";
-    //this.code = options?.code || this.generateErrorCode(message);
+    // this.code = options?.code || this.generateErrorCode(message);
     this.details = options?.details;
     Error.captureStackTrace(this, this.constructor);
   }
