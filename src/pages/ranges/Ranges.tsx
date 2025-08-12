@@ -9,12 +9,15 @@ const Ranges = () => {
     console.log("Ranges page update");
   });
 
+  //Ctrl+F -> ??? to find incomplete code blocks
+
   //Objects of the collections based on location.
   //Keys are the collection names
   //Values are connection strings to the collections
 
   //[key: string]: string is an index signature
-  type Collection = {
+  //???
+  type Positions = {
     UTG: string;
     UTG1: string;
     MP: string;
@@ -26,8 +29,9 @@ const Ranges = () => {
     BB: string;
   };
 
-  //Cash database
-  const cashCollections: Collection = {
+  //Cash positions
+  //???
+  const cashPositions: Positions = {
     UTG: "cashutg",
     UTG1: "cashutg1",
     MP: "cashmp",
@@ -39,8 +43,9 @@ const Ranges = () => {
     BB: "cashbb",
   };
 
-  //Tournament database
-  const mttCollections: Collection = {
+  //Tournament positions
+  //???
+  const tournamentPositions: Positions = {
     UTG: "mttutg",
     UTG1: "mttutg1",
     MP: "mttmp",
@@ -55,30 +60,35 @@ const Ranges = () => {
   //Interface instead of type in case it will be extended
   interface Profile {
     _id?: string;
-    profilename: string;
+    profileName: string;
+    description: string;
+    rangeType: string;
+    gameType: string;
+    stackSize: string;
+    position: string;
     range: {
       call: string[];
       raise: string[];
     };
-    description: string;
-    type: string;
-    stack: string;
   }
 
   //The state for the form structure
   const [form, setForm] = useState<Profile>({
-    profilename: "",
+    profileName: "",
+    description: "",
+    rangeType: "",
+    gameType: "",
+    stackSize: "",
+    position: "",
     range: {
       call: [],
       raise: [],
     },
-    description: "",
-    type: "",
-    stack: "",
   });
 
   /*The state that shows which database, connection string and 
   table position is currently open for debug */
+  //???
   const [location, setLocation] = useState({
     database: "",
     collection: "",
@@ -262,6 +272,7 @@ const Ranges = () => {
 
   /*The different play positions, stack sizes and range types. 
   Used with the ButtonArray component. */
+  //???
 
   const positions = ["UTG", "UTG1", "MP", "LJ", "HJ", "CO", "BTN", "SB", "BB"];
   const stacksizes = ["150bb", "100bb", "60bb", "30bb", "20bb", "u20bb"];
@@ -273,10 +284,10 @@ const Ranges = () => {
   const [profileId, setProfileId] = useState("");
 
   //The state for the currently open stack size.
-  const [stack, setStack] = useState("");
+  const [stackSize, setStackSize] = useState("");
 
   //The state that shows which range type is currently open (ie. which profiles can be opened).
-  const [rangetype, setRangetype] = useState("");
+  const [rangeType, setRangeType] = useState("");
 
   //The state that shows which range button was clicked last
   const [buttonId, setButtonId] = useState("");
@@ -288,9 +299,9 @@ const Ranges = () => {
   filters are active */
 
   const [dbToggle, setDbToggle] = useState("");
-  const [collectionToggle, setCollectionToggle] = useState("");
-  const [stackToggle, setStackToggle] = useState("");
-  const [typeToggle, setTypeToggle] = useState("");
+  const [positionToggle, setPositionToggle] = useState("");
+  const [stackSizeToggle, setStackSizeToggle] = useState("");
+  const [rangeTypeToggle, setRangeTypeToggle] = useState("");
 
   //States for the ability to edit and delete profiles
   const [edit, setEdit] = useState<boolean>(false);
@@ -488,23 +499,25 @@ const Ranges = () => {
     clearMatrix();
 
     setForm({
-      profilename: "",
+      profileName: "",
+      description: "",
+      rangeType: "",
+      gameType: "",
+      stackSize: "",
+      position: "",
       range: {
         call: [],
         raise: [],
       },
-      description: "",
-      type: "",
-      stack: "",
     });
 
     setProfileId("");
 
-    setRangetype("");
-    setStack("");
+    setRangeType("");
+    setStackSize("");
 
-    setStackToggle("");
-    setTypeToggle("");
+    setStackSizeToggle("");
+    setRangeTypeToggle("");
 
     setEdit(false);
     setDel(false);
@@ -516,7 +529,7 @@ const Ranges = () => {
   //This is only used when reopening or changing the database.
   const clearProfile = () => {
     clearForm();
-    setCollectionToggle("");
+    setPositionToggle("");
     setDbToggle("");
 
     setEdit(false);
@@ -558,9 +571,9 @@ const Ranges = () => {
 
     clearForm(); //Clears existing form information
     console.log(eTarget.id);
-    setStack(eTarget.id);
+    setStackSize(eTarget.id);
     updateForm({ stack: eTarget.id });
-    setStackToggle(eTarget.id);
+    setStackSizeToggle(eTarget.id);
   };
 
   /*Declares a variable to hold the initial connection string.
@@ -568,7 +581,8 @@ const Ranges = () => {
   let destination;
 
   //Function to open position data (BB, SB...) inside a database (MTT or Cash)
-  const handleCollection = async (event: React.MouseEvent<HTMLDivElement>) => {
+  //???
+  const handlePosition = async (event: React.MouseEvent<HTMLDivElement>) => {
     if (!event) {
       console.error("Event is null or undefined");
       return;
@@ -590,14 +604,14 @@ const Ranges = () => {
       setLocation((prev) => {
         return {
           ...prev,
-          collection: cashCollections[eTarget.id as keyof Collection],
+          collection: cashPositions[eTarget.id as keyof Positions],
         };
       });
       //Also updates destination variable for fetch
-      destination = cashCollections[eTarget.id as keyof Collection];
+      destination = cashPositions[eTarget.id as keyof Positions];
       /*Even if the connection string state can't be used in this function,
       I still want to set it and use it later */
-      setConnString(cashCollections[eTarget.id as keyof Collection]);
+      setConnString(cashPositions[eTarget.id as keyof Positions]);
 
       console.log(location.database);
     } else if (location.database === "Tournament") {
@@ -605,13 +619,13 @@ const Ranges = () => {
       setLocation((prev) => {
         return {
           ...prev,
-          collection: mttCollections[eTarget.id as keyof Collection],
+          collection: tournamentPositions[eTarget.id as keyof Positions],
         };
       });
 
-      destination = mttCollections[eTarget.id as keyof Collection];
+      destination = tournamentPositions[eTarget.id as keyof Positions];
 
-      setConnString(mttCollections[eTarget.id as keyof Collection]);
+      setConnString(tournamentPositions[eTarget.id as keyof Positions]);
 
       console.log(location.database);
     } else {
@@ -657,7 +671,7 @@ const Ranges = () => {
       return { ...prev, position: eTarget.id };
     });
     //And sets toggle to show the open collection.
-    setCollectionToggle(eTarget.id);
+    setPositionToggle(eTarget.id);
   };
 
   //Two functions to help debug.
@@ -665,13 +679,14 @@ const Ranges = () => {
   const checkLocation = () => {
     console.log(`Location: ${JSON.stringify(location)}`);
     console.log(`Database toggle: ${JSON.stringify(dbToggle)}`);
-    console.log(`Collection toggle: ${JSON.stringify(collectionToggle)}`);
-    console.log(`Stack toggle: ${JSON.stringify(stackToggle)}`);
-    console.log(`Type toggle: ${JSON.stringify(typeToggle)}`);
+    console.log(`Position toggle: ${JSON.stringify(positionToggle)}`);
+    console.log(`Stack toggle: ${JSON.stringify(stackSizeToggle)}`);
+    console.log(`Type toggle: ${JSON.stringify(rangeTypeToggle)}`);
     console.log(`Connection string: ${connString}`);
   };
 
   //Shows current profile id, if edit is toggled, the current form and current active states.
+  //???
   const checkStatus = () => {
     console.log(`Profile ID: ${profileId}`);
     console.log(`Edit toggle: ${edit}`);
@@ -683,6 +698,7 @@ const Ranges = () => {
   //Using event.currentTarget to specify to TypeScript that the event happens where the listener is (the button) and not a potential child.
   //For example, attaching a listener to a div that has a button child makes event.target (button) and event.currentTarget(div with listener) different.
   //Using currentTarget isn't always possible so TypeScript also accepts specified typing for the HTMLElement(const asd = event.currentTarget as HTMLDivElement).
+  //???
   const handleType = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!event) {
       console.error("Event is null or undefined");
@@ -710,17 +726,18 @@ const Ranges = () => {
     });
     setProfileId("");
 
-    setRangetype(eTarget.id);
+    setRangeType(eTarget.id);
 
     updateForm({ type: eTarget.id });
 
-    setTypeToggle(eTarget.id);
+    setRangeTypeToggle(eTarget.id);
 
     setEdit(false);
     setDel(false);
   };
 
   //Returns a list of profiles in a dropdown menu
+  //???
   const profileList = () => {
     return (
       <div className="form-group">
@@ -736,10 +753,13 @@ const Ranges = () => {
           {/* Maps profiles to create a list that match
           rangetype and stack states */}
           {profiles.map((profile) => {
-            if (rangetype === profile.type && stack === profile.stack) {
+            if (
+              rangeType === profile.rangeType &&
+              stackSize === profile.stackSize
+            ) {
               return (
                 <option value={JSON.stringify(profile)}>
-                  {profile.profilename}
+                  {profile.profileName}
                 </option>
               );
             } else {
@@ -752,6 +772,7 @@ const Ranges = () => {
   };
 
   //Opens a profile from the list.
+  //???
   const openProfile = (profile: string) => {
     //Make the profile into a JavaScript object.
     let profile_object: Profile = JSON.parse(profile);
@@ -789,14 +810,16 @@ const Ranges = () => {
     }
     //Sets the form to what it finds.
     setForm({
-      profilename: profile_object.profilename,
+      profileName: profile_object.profileName,
+      description: profile_object.description,
+      rangeType: profile_object.rangeType,
+      gameType: profile_object.gameType,
+      stackSize: profile_object.stackSize,
+      position: profile_object.position,
       range: {
         call: profile_object.range.call,
         raise: profile_object.range.raise,
       },
-      description: profile_object.description,
-      type: profile_object.type,
-      stack: profile_object.stack,
     });
   };
 
@@ -914,19 +937,22 @@ const Ranges = () => {
   };
 
   //Function to edit (patch) a profile.
+  //???
   const onEdit = async () => {
     console.log(profileId);
 
     //Another way to write { ...form }.
     const editedProfile = {
-      profilename: form.profilename,
+      profileName: form.profileName,
+      description: form.description,
+      rangeType: form.rangeType,
+      gameType: form.gameType,
+      stackSize: form.stackSize,
+      position: form.position,
       range: {
         call: form.range.call,
         raise: form.range.raise,
       },
-      description: form.description,
-      type: form.type,
-      stack: form.stack,
     };
 
     //Try to find the profile that will be patched, and patch it.
@@ -959,11 +985,12 @@ const Ranges = () => {
     //Check if the form is filled up:
     //If yes, then submit or edit;
     //if no, window.alert an error.
+    //??? incomplete form?
     if (
-      form.profilename !== "" &&
+      form.profileName !== "" &&
       form.description !== "" &&
-      form.type !== "" &&
-      form.stack !== ""
+      form.rangeType !== "" &&
+      form.stackSize !== ""
     ) {
       //If the call and raise arrays both have nothing in them, alert.
       if (form.range.call.length === 0 && form.range.raise.length === 0) {
@@ -995,8 +1022,8 @@ const Ranges = () => {
       return;
     });
 
-    console.log(`Profile ${form.profilename} deleted`);
-    window.alert(`Profile ${form.profilename} deleted`);
+    console.log(`Profile ${form.profileName} deleted`);
+    window.alert(`Profile ${form.profileName} deleted`);
 
     //Filter profiles locally after deletion.
     const newProfiles = profiles.filter((profile) => profile._id !== id);
@@ -1023,7 +1050,7 @@ const Ranges = () => {
         ) : null}
 
         {/* Buttons to open the databases. */}
-        {/* Div TabIndex and rows in TypeScript is specified as a number, so {1} is used despite it ending up as a string later anyway. */}
+        {/* Div TabIndex and rows in TypeScript is specified as a number, so {0} is used despite it ending up as a string later anyway. */}
         <div className="form-group">
           <div
             className="db-btn"
@@ -1057,15 +1084,15 @@ const Ranges = () => {
         <ButtonArray
           class="positions"
           array={positions}
-          toggle={collectionToggle}
-          onClick={handleCollection}
+          toggle={positionToggle}
+          onClick={handlePosition}
         />
       </div>
       <div className="form-group">
         <ButtonArray
           class="stacks"
           array={stacksizes}
-          toggle={stackToggle}
+          toggle={stackSizeToggle}
           onClick={handleStack}
         />
       </div>
@@ -1073,7 +1100,7 @@ const Ranges = () => {
         <ButtonArray
           class="types"
           array={rangetypes}
-          toggle={typeToggle}
+          toggle={rangeTypeToggle}
           onClick={handleType}
         />
       </div>
@@ -1083,7 +1110,7 @@ const Ranges = () => {
         <h1>Select a database</h1>
       ) : (
         <h1>
-          {location.database} database: {location.position} {stack}
+          {location.database} database: {location.position} {stackSize}
         </h1>
       )}
       {location.position === "" && location.database !== "" ? (
@@ -1091,7 +1118,9 @@ const Ranges = () => {
       ) : null}
 
       {/* Display stack size selection. */}
-      {location.position !== "" && location.database !== "" && stack === "" ? (
+      {location.position !== "" &&
+      location.database !== "" &&
+      stackSize === "" ? (
         <h2>Select Stack size</h2>
       ) : null}
 
@@ -1102,45 +1131,45 @@ const Ranges = () => {
       {/* Profile selection */}
 
       {/* If some position (collection) and stack size, but no range type. */}
-      {location.position !== "" && stack !== "" && rangetype === "" ? (
+      {location.position !== "" && stackSize !== "" && rangeType === "" ? (
         <h2>Select a range type</h2>
       ) : null}
 
       {/* If no profilename, but some position, stack size and range type. */}
-      {form.profilename === "" &&
+      {form.profileName === "" &&
       location.position !== "" &&
-      stack !== "" &&
-      rangetype !== "" ? (
-        <h2>Select or create a profile: {rangetype}</h2>
+      stackSize !== "" &&
+      rangeType !== "" ? (
+        <h2>Select or create a profile: {rangeType}</h2>
       ) : null}
 
       {/* If some profilename, position, stack size and range type. */}
-      {form.profilename !== "" &&
+      {form.profileName !== "" &&
       location.position !== "" &&
-      stack !== "" &&
-      rangetype !== "" ? (
-        <h2>Change profiles: {rangetype}</h2>
+      stackSize !== "" &&
+      rangeType !== "" ? (
+        <h2>Change profiles: {rangeType}</h2>
       ) : null}
 
       {/* If all three of position, stack size and rangetype exist, show profile list. */}
-      {location.position !== "" && stack !== "" && rangetype !== "" ? (
+      {location.position !== "" && stackSize !== "" && rangeType !== "" ? (
         <div>{profileList()}</div>
       ) : null}
 
       {/* Display profile information, or "empty" if no value. */}
       <h2>
         Profile name:{" "}
-        {form.profilename === "" ? "Profile not open" : form.profilename}
+        {form.profileName === "" ? "Profile not open" : form.profileName}
       </h2>
       <p>
         <b>Range description: </b>
         {form.description === "" ? "empty" : form.description}
         <br />
         <b>Range type: </b>
-        {form.type === "" ? "empty" : form.type}
+        {form.rangeType === "" ? "empty" : form.rangeType}
         <br />
         <b>Range stack size: </b>
-        {form.stack === "" ? "empty" : form.stack}
+        {form.stackSize === "" ? "empty" : form.stackSize}
         <br />
         <b>Saved range:</b>
         <br />
@@ -1181,7 +1210,7 @@ const Ranges = () => {
             type="text"
             className="form-control"
             id="profilename"
-            value={form.profilename}
+            value={form.profileName}
             onChange={(e) => updateForm({ profilename: e.target.value })}
           />
         </div>
