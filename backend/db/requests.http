@@ -1,0 +1,10 @@
+
+GET http://localhost:3001/templates/alltemplates
+
+###
+
+GET http://localhost:3001/templates/cashtemplates
+
+###
+
+GET http://localhost:3001/templates/tournamenttemplates

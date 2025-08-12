@@ -6,14 +6,13 @@ import express from "express";
 const router = express.Router();
 
 // Potential global authentication function sequence for profile routes
-/*
-router.all('{*splat}', requireAuthentication)
-router.all('{*splat}', loadUser)
-*/
+// router.all('{*splat}', requireAuthentication)
+// router.all('{*splat}', loadUser)
+
 
 router.get("/profile/:id", async (request, response, next) => {
   try {
-    const profilesById = parseProfiles(
+    const profilesById = await parseProfiles(
       profileSelectRepository.selectById.bind(profileSelectRepository),
       "all",
       request.params.id
@@ -26,7 +25,7 @@ router.get("/profile/:id", async (request, response, next) => {
 
 router.get("/tournamentprofile/:id", async (request, response, next) => {
   try {
-    const profilesById = parseProfiles(
+    const profilesById = await parseProfiles(
       profileSelectRepository.selectById.bind(profileSelectRepository),
       "tournament",
       request.params.id
@@ -39,7 +38,7 @@ router.get("/tournamentprofile/:id", async (request, response, next) => {
 
 router.get("/cashprofile/:id", async (request, response, next) => {
   try {
-    const profilesById = parseProfiles(
+    const profilesById = await parseProfiles(
       profileSelectRepository.selectById.bind(profileSelectRepository),
       "cash",
       request.params.id

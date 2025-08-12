@@ -8,7 +8,7 @@ const router = express.Router();
 //Fetches the template set of ranges
 router.get("/alltemplates", async (request, response, next) => {
   try {
-    const allTemplates = parseTemplates(
+    const allTemplates = await parseTemplates(
       profileSelectRepository.selectTemplates.bind(profileSelectRepository),
       "all"
     );
@@ -20,7 +20,7 @@ router.get("/alltemplates", async (request, response, next) => {
 
 router.get("/tournamenttemplates", async (request, response, next) => {
   try {
-    const tournamentTemplates = parseTemplates(
+    const tournamentTemplates = await parseTemplates(
       profileSelectRepository.selectTemplates.bind(profileSelectRepository),
       "tournament"
     );
@@ -32,7 +32,7 @@ router.get("/tournamenttemplates", async (request, response, next) => {
 
 router.get("/cashtemplates", async (request, response, next) => {
   try {
-    const cashTemplates = parseTemplates(
+    const cashTemplates = await parseTemplates(
       profileSelectRepository.selectTemplates.bind(profileSelectRepository),
       "cash"
     );
