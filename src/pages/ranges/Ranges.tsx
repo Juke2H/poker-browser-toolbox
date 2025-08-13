@@ -86,6 +86,9 @@ const Ranges = () => {
     },
   });
 
+  //User login state
+  const [userLoggedIn, SetUserLoggedIn] = useState(false);
+
   /*The state that shows which database, connection string and 
   table position is currently open for debug */
   //???
@@ -316,6 +319,7 @@ const Ranges = () => {
   const [d_bug] = useState<boolean>(false);
 
   //A function to empty a matrix (set the active of all combos to 0)
+  //??? Why are only some keys marked as strings?
   const clearMatrix = () => {
     setActive({
       AA: 0,
@@ -547,16 +551,60 @@ const Ranges = () => {
   };
 
   //Closes everything under the current database and opens a new one
-  const handleDatabase = (db: string) => {
+  //??? Database connection should happen here
+  const handleDatabase = async (db: string) => {
+    //Sets loading indicator and starts loading new profiles
+    setIsLoading(true);
     clearProfile();
     setProfiles([]);
     setLocation(() => {
       return { database: `${db}`, collection: "", position: "" };
     });
-    setDbToggle(db);
+    setDbToggle(db); //"Cash" or "tournament"
+    //Attempt to connect
+    let destination: string;
+    try {
+      //If no user is logged in, fetch templates
+      if (!userLoggedIn) {
+        destination = `templates/${db}templates`;
+        setConnString(destination);
+      } else {
+        destination = `profiles/${db}profiles`;
+        setConnString(destination);
+        //??? need userid after dbprofiles
+      }
+
+      const response = await fetch(`/${destination}`);
+
+      /*If the response is anything other than the data,
+      responds with an alert window stating the error text. */
+      if (!response.ok) {
+        const message = `An error occurred: ${response.statusText}`;
+        window.alert(message);
+        return;
+      }
+
+      //Wait for and take the data as JavaScript objects.
+      let profiles_json = await response.json();
+      setProfiles(profiles_json);
+    } catch (error) {
+      // Make sure the error message is a string in case of unknown error
+      let errorMessage = "Something broke";
+      // And make it the actual error message if it's known
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      window.alert(errorMessage);
+      console.log(errorMessage);
+      setErr(errorMessage);
+    } finally {
+      //Finishes loading
+      setIsLoading(false);
+    }
   };
 
   //Sets the stack size to the filter button id
+  //???
   const handleStack = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!event) {
       console.error("Event is null or undefined");
@@ -576,12 +624,8 @@ const Ranges = () => {
     setStackSizeToggle(eTarget.id);
   };
 
-  /*Declares a variable to hold the initial connection string.
-  State can't be used here since setting state is async. */
-  let destination;
-
   //Function to open position data (BB, SB...) inside a database (MTT or Cash)
-  //???
+  //??? this should filter profiles, nothing else
   const handlePosition = async (event: React.MouseEvent<HTMLDivElement>) => {
     if (!event) {
       console.error("Event is null or undefined");
@@ -600,19 +644,13 @@ const Ranges = () => {
     if (location.database === "Cash") {
       //If the open game type is "Cash"
 
-      //Sets location state to show which collection (connection string) is open
+      //Sets location state to show which position is opened
       setLocation((prev) => {
         return {
           ...prev,
           collection: cashPositions[eTarget.id as keyof Positions],
         };
       });
-      //Also updates destination variable for fetch
-      destination = cashPositions[eTarget.id as keyof Positions];
-      /*Even if the connection string state can't be used in this function,
-      I still want to set it and use it later */
-      setConnString(cashPositions[eTarget.id as keyof Positions]);
-
       console.log(location.database);
     } else if (location.database === "Tournament") {
       //Else if the open database is "Tournament"
@@ -623,10 +661,6 @@ const Ranges = () => {
         };
       });
 
-      destination = tournamentPositions[eTarget.id as keyof Positions];
-
-      setConnString(tournamentPositions[eTarget.id as keyof Positions]);
-
       console.log(location.database);
     } else {
       //And if neither database is open
@@ -634,36 +668,6 @@ const Ranges = () => {
       console.log("Database not open");
 
       return;
-    }
-    //After finding the connection string, attemps to connect.
-    try {
-      //Sets loading state to show that connection is in progress.
-      setIsLoading(true);
-
-      //Setting state is async so using destination makes sure the connection starts
-      const response = await fetch(`/${destination}/`);
-
-      /*If the response is anything other than the data,
-      responds with an alert window stating the error text. */
-      if (!response.ok) {
-        const message = `An error occurred: ${response.statusText}`;
-        window.alert(message);
-        return;
-      }
-
-      //Wait for and take the data as JavaScript objects.
-      let profiles_json = await response.json();
-
-      console.log(`Profile list: ${JSON.stringify(profiles_json, null, 4)}`);
-
-      //Sets profiles to the found data.
-      setProfiles(profiles_json);
-    } catch (err: any) {
-      //If an error is found, sets the error state and shows it on the page.
-      setErr(err.message);
-    } finally {
-      //Finally sets the loading page back to false to signal a finished connection attempt.
-      setIsLoading(false);
     }
 
     //Sets location.position to the clicked button.
@@ -710,20 +714,10 @@ const Ranges = () => {
       console.error("Event target has no Id");
       return;
     }
-    clearMatrix();
     console.log(eTarget.id);
-    setForm((prev) => {
-      return {
-        ...prev,
-        profilename: "",
-        range: {
-          call: [],
-          raise: [],
-        },
-        description: "",
-        type: "",
-      };
-    });
+
+    clearForm();
+
     setProfileId("");
 
     setRangeType(eTarget.id);
@@ -925,6 +919,7 @@ const Ranges = () => {
       },
       body: JSON.stringify(newProfile),
     }).catch((error) => {
+      //??? might need if error instanceof Error string type confirmation
       //Window alert if an error occurs.
       window.alert(error);
       return;
@@ -963,6 +958,7 @@ const Ranges = () => {
         "Content-Type": "application/json",
       },
     }).catch((error) => {
+      //??? might need if error instanceof Error string type confirmation
       window.alert(error);
       return;
     });
@@ -1017,6 +1013,7 @@ const Ranges = () => {
     await fetch(`/${connString}/${id}`, {
       method: "DELETE",
     }).catch((error) => {
+      //??? might need if error instanceof Error string type confirmation
       //And alert if profile isn't found.
       window.alert(error);
       return;
