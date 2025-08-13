@@ -10,7 +10,7 @@ const router = express.Router();
 // router.all('{*splat}', loadUser)
 
 
-router.get("/profile/:id", async (request, response, next) => {
+router.get("/allprofiles/:id", async (request, response, next) => {
   try {
     const profilesById = await parseProfiles(
       profileSelectRepository.selectById.bind(profileSelectRepository),
@@ -23,7 +23,7 @@ router.get("/profile/:id", async (request, response, next) => {
   }
 });
 
-router.get("/tournamentprofile/:id", async (request, response, next) => {
+router.get("/tournamentprofiles/:id", async (request, response, next) => {
   try {
     const profilesById = await parseProfiles(
       profileSelectRepository.selectById.bind(profileSelectRepository),
@@ -36,7 +36,7 @@ router.get("/tournamentprofile/:id", async (request, response, next) => {
   }
 });
 
-router.get("/cashprofile/:id", async (request, response, next) => {
+router.get("/cashprofiles/:id", async (request, response, next) => {
   try {
     const profilesById = await parseProfiles(
       profileSelectRepository.selectById.bind(profileSelectRepository),
@@ -50,7 +50,7 @@ router.get("/cashprofile/:id", async (request, response, next) => {
 });
 
 // This is likely going to be for empty, or newly created, profiles
-router.post("/profile/:id", async (request, response, next) => {
+router.post("/allprofiles/:id", async (request, response, next) => {
   try {
     //
   } catch (error) {
@@ -60,7 +60,7 @@ router.post("/profile/:id", async (request, response, next) => {
 
 // And these fill out the ranges
 // Might want to use PATCH for that, though
-router.post("/tournamentprofile/:id", async (request, response, next) => {
+router.post("/tournamentprofiles/:id", async (request, response, next) => {
   try {
     //
   } catch (error) {
@@ -68,7 +68,7 @@ router.post("/tournamentprofile/:id", async (request, response, next) => {
   }
 });
 
-router.post("/cashprofile/:id", async (request, response, next) => {
+router.post("/cashprofiles/:id", async (request, response, next) => {
   try {
     //
   } catch (error) {
@@ -79,7 +79,7 @@ router.post("/cashprofile/:id", async (request, response, next) => {
 // HTTP PATCH is used to update the entity, PUT replaces it entirely
 // Using PUT like PATCH would need the entire entity to be sent regardless of how much of it is altered
 // PATCH requires only the alterations
-router.patch("/profile/:id", async (request, response, next) => {
+router.patch("/allprofiles/:id", async (request, response, next) => {
   try {
     //
   } catch (error) {
@@ -87,7 +87,7 @@ router.patch("/profile/:id", async (request, response, next) => {
   }
 });
 
-router.patch("/tournamentprofile/:id", async (request, response, next) => {
+router.patch("/tournamentprofiles/:id", async (request, response, next) => {
   try {
     //
   } catch (error) {
@@ -95,7 +95,7 @@ router.patch("/tournamentprofile/:id", async (request, response, next) => {
   }
 });
 
-router.patch("/cashprofile/:id", async (request, response, next) => {
+router.patch("/cashprofiles/:id", async (request, response, next) => {
   try {
     //
   } catch (error) {
@@ -104,7 +104,7 @@ router.patch("/cashprofile/:id", async (request, response, next) => {
 });
 
 // Delete entire profile (along with user probably)
-router.delete("/profile/:id", async (request, response, next) => {
+router.delete("/allprofiles/:id", async (request, response, next) => {
   try {
     //
   } catch (error) {
@@ -113,7 +113,7 @@ router.delete("/profile/:id", async (request, response, next) => {
 });
 
 // Delete tournament ranges
-router.delete("/tournamentprofile/:id", async (request, response, next) => {
+router.delete("/tournamentprofiles/:id", async (request, response, next) => {
   try {
     //
   } catch (error) {
@@ -122,7 +122,7 @@ router.delete("/tournamentprofile/:id", async (request, response, next) => {
 });
 
 // Delete cash ranges
-router.delete("/cashprofile/:id", async (request, response, next) => {
+router.delete("/cashprofiles/:id", async (request, response, next) => {
   try {
     //
   } catch (error) {
