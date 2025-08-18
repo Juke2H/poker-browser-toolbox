@@ -4,12 +4,16 @@ import "./Ranges.css";
 import Matrix, { ComboMatrix } from "../../components/matrix/Matrix";
 import ButtonArray from "../../components/buttonarray/ButtonArray";
 
-const Ranges = () => {
-  useEffect(() => {
-    console.log("Ranges page update");
-  });
+//Uses position-, stackSize- and rangeTypeToggle states to filter the profile list in real time
+const filterMatch = (profileKey: string, matchValue: string): boolean => {
+  //Filter the profile list by either nothing or the value of the selected object key
+  //Returning true when a filter isn't active still allows the other filters to do their thing
+  return matchValue === "" || profileKey === matchValue;
+};
 
+const Ranges = () => {
   //Ctrl+F -> ??? to find incomplete code blocks
+  // When done, remove localhost from connection strings before running build
 
   //Objects of the collections based on location.
   //Keys are the collection names
@@ -275,7 +279,6 @@ const Ranges = () => {
 
   /*The different play positions, stack sizes and range types. 
   Used with the ButtonArray component. */
-  //???
 
   const positions = ["UTG", "UTG1", "MP", "LJ", "HJ", "CO", "BTN", "SB", "BB"];
   const stacksizes = ["150bb", "100bb", "60bb", "30bb", "20bb", "u20bb"];
@@ -283,7 +286,8 @@ const Ranges = () => {
 
   /* States for the fetched profile list 
   and a singular profile ID that will be called for later. */
-  const [profiles, setProfiles] = useState<Array<Profile>>([]);
+  const [allProfiles, setAllProfiles] = useState<Array<Profile>>([]);
+  const [filteredProfiles, setFilteredProfiles] = useState<Array<Profile>>([]);
   const [profileId, setProfileId] = useState("");
 
   //The state for the currently open stack size.
@@ -498,6 +502,19 @@ const Ranges = () => {
     });
   };
 
+  //An effect to filter the profile list on each re-render
+  useEffect(() => {
+    const newFilteredProfiles = allProfiles.filter((profile) => {
+      //.filter adds the profile object into the new array if the filter is empty or matches
+      return (
+        filterMatch(profile.position, positionToggle) &&
+        filterMatch(profile.stackSize, stackSizeToggle) &&
+        filterMatch(profile.rangeType, rangeTypeToggle)
+      );
+    });
+    setFilteredProfiles(newFilteredProfiles);
+  }, [allProfiles, positionToggle, stackSizeToggle, rangeTypeToggle]);
+
   //A function to empty out all form elements and profileId, rangetype and stack states.
   const clearForm = () => {
     clearMatrix();
@@ -551,30 +568,29 @@ const Ranges = () => {
   };
 
   //Closes everything under the current database and opens a new one
-  //??? Database connection should happen here
   const handleDatabase = async (db: string) => {
     //Sets loading indicator and starts loading new profiles
     setIsLoading(true);
     clearProfile();
-    setProfiles([]);
+    setAllProfiles([]);
     setLocation(() => {
       return { database: `${db}`, collection: "", position: "" };
     });
-    setDbToggle(db); //"Cash" or "tournament"
+    setDbToggle(db); //"cash" or "tournament"
     //Attempt to connect
     let destination: string;
     try {
       //If no user is logged in, fetch templates
-      if (!userLoggedIn) {
-        destination = `templates/${db}templates`;
+      if (userLoggedIn) {
+        destination = `profiles/${db}profiles`;
         setConnString(destination);
       } else {
-        destination = `profiles/${db}profiles`;
+        destination = `templates/${db}templates`;
         setConnString(destination);
         //??? need userid after dbprofiles
       }
 
-      const response = await fetch(`/${destination}`);
+      const response = await fetch(`http://localhost:3001/${destination}`);
 
       /*If the response is anything other than the data,
       responds with an alert window stating the error text. */
@@ -586,10 +602,11 @@ const Ranges = () => {
 
       //Wait for and take the data as JavaScript objects.
       let profiles_json = await response.json();
-      setProfiles(profiles_json);
+      console.log(profiles_json);
+      setAllProfiles(profiles_json);
     } catch (error) {
       // Make sure the error message is a string in case of unknown error
-      let errorMessage = "Something broke";
+      let errorMessage: string = "Something broke";
       // And make it the actual error message if it's known
       if (error instanceof Error) {
         errorMessage = error.message;
@@ -603,29 +620,8 @@ const Ranges = () => {
     }
   };
 
-  //Sets the stack size to the filter button id
-  //???
-  const handleStack = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!event) {
-      console.error("Event is null or undefined");
-      return;
-    }
-    const eTarget = event.currentTarget;
-
-    if (!eTarget.id) {
-      console.error("Event target has no Id");
-      return;
-    }
-
-    clearForm(); //Clears existing form information
-    console.log(eTarget.id);
-    setStackSize(eTarget.id);
-    updateForm({ stack: eTarget.id });
-    setStackSizeToggle(eTarget.id);
-  };
-
   //Function to open position data (BB, SB...) inside a database (MTT or Cash)
-  //??? this should filter profiles, nothing else
+  //??? need profile filtering by the position key in the profile state JSON (that is an array of objects)
   const handlePosition = async (event: React.MouseEvent<HTMLDivElement>) => {
     if (!event) {
       console.error("Event is null or undefined");
@@ -640,8 +636,12 @@ const Ranges = () => {
     clearForm();
 
     console.log(eTarget.id);
+    const positionFilteredProfiles = allProfiles.filter(
+      (profile) => profile.position === eTarget.id
+    );
+    setAllProfiles(positionFilteredProfiles);
 
-    if (location.database === "Cash") {
+    if (location.database === "cash") {
       //If the open game type is "Cash"
 
       //Sets location state to show which position is opened
@@ -651,8 +651,7 @@ const Ranges = () => {
           collection: cashPositions[eTarget.id as keyof Positions],
         };
       });
-      console.log(location.database);
-    } else if (location.database === "Tournament") {
+    } else if (location.database === "tournament") {
       //Else if the open database is "Tournament"
       setLocation((prev) => {
         return {
@@ -660,8 +659,6 @@ const Ranges = () => {
           collection: tournamentPositions[eTarget.id as keyof Positions],
         };
       });
-
-      console.log(location.database);
     } else {
       //And if neither database is open
       window.alert("No open database");
@@ -676,6 +673,65 @@ const Ranges = () => {
     });
     //And sets toggle to show the open collection.
     setPositionToggle(eTarget.id);
+  };
+
+  //Sets the stack size to the filter button id
+  //??? need profile filtering by the stackSize key in the profile state JSON (that is an array of objects)
+  const handleStack = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!event) {
+      console.error("Event is null or undefined");
+      return;
+    }
+    const eTarget = event.currentTarget;
+
+    if (!eTarget.id) {
+      console.error("Event target has no Id");
+      return;
+    }
+
+    clearForm(); //Clears existing form information
+    console.log(eTarget.id);
+    const stackFilteredProfiles = allProfiles.filter(
+      (profile) => profile.stackSize === eTarget.id
+    );
+    setAllProfiles(stackFilteredProfiles);
+    setStackSize(eTarget.id);
+    updateForm({ stack: eTarget.id });
+    setStackSizeToggle(eTarget.id);
+  };
+
+  //Sets rangetype to selected option and empties previous form.
+  //Using event.currentTarget to specify to TypeScript that the event happens where the listener is (the button) and not a potential child.
+  //For example, attaching a listener to a div that has a button child makes event.target (button) and event.currentTarget(div with listener) different.
+  //Using currentTarget isn't always possible so TypeScript also accepts specified typing for the HTMLElement(const asd = event.currentTarget as HTMLDivElement).
+  //??? need profile filtering by the rangeType key in the profile state JSON (that is an array of objects)
+  const handleType = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!event) {
+      console.error("Event is null or undefined");
+      return;
+    }
+    const eTarget = event.currentTarget;
+
+    if (!eTarget.id) {
+      console.error("Event target has no Id");
+      return;
+    }
+    console.log(eTarget.id);
+    const rangeTypeFilteredProfiles = allProfiles.filter(
+      (profile) => profile.rangeType === eTarget.id
+    );
+    setAllProfiles(rangeTypeFilteredProfiles);
+
+    setProfileId("");
+
+    setRangeType(eTarget.id);
+
+    updateForm({ type: eTarget.id });
+
+    setRangeTypeToggle(eTarget.id);
+
+    setEdit(false);
+    setDel(false);
   };
 
   //Two functions to help debug.
@@ -698,38 +754,6 @@ const Ranges = () => {
     console.log(`Active: ${JSON.stringify(active)}`);
   };
 
-  //Sets rangetype to selected option and empties previous form.
-  //Using event.currentTarget to specify to TypeScript that the event happens where the listener is (the button) and not a potential child.
-  //For example, attaching a listener to a div that has a button child makes event.target (button) and event.currentTarget(div with listener) different.
-  //Using currentTarget isn't always possible so TypeScript also accepts specified typing for the HTMLElement(const asd = event.currentTarget as HTMLDivElement).
-  //???
-  const handleType = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!event) {
-      console.error("Event is null or undefined");
-      return;
-    }
-    const eTarget = event.currentTarget;
-
-    if (!eTarget.id) {
-      console.error("Event target has no Id");
-      return;
-    }
-    console.log(eTarget.id);
-
-    clearForm();
-
-    setProfileId("");
-
-    setRangeType(eTarget.id);
-
-    updateForm({ type: eTarget.id });
-
-    setRangeTypeToggle(eTarget.id);
-
-    setEdit(false);
-    setDel(false);
-  };
-
   //Returns a list of profiles in a dropdown menu
   //???
   const profileList = () => {
@@ -746,7 +770,7 @@ const Ranges = () => {
           <option disabled>***Profiles***</option>
           {/* Maps profiles to create a list that match
           rangetype and stack states */}
-          {profiles.map((profile) => {
+          {filteredProfiles.map((profile) => {
             if (
               rangeType === profile.rangeType &&
               stackSize === profile.stackSize
@@ -912,7 +936,7 @@ const Ranges = () => {
     const newProfile = { ...form };
 
     //Attempt to find the collection, and send profile to collection.
-    await fetch(`/${connString}`, {
+    await fetch(`http://localhost:3001/${connString}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -951,7 +975,7 @@ const Ranges = () => {
     };
 
     //Try to find the profile that will be patched, and patch it.
-    await fetch(`/${connString}/${profileId}`, {
+    await fetch(`http://localhost:3001/${connString}/${profileId}`, {
       method: "PATCH",
       body: JSON.stringify(editedProfile),
       headers: {
@@ -1010,7 +1034,7 @@ const Ranges = () => {
   //Function for deleting a profile.
   const deleteProfile = async (id: string) => {
     //Try to find the profile, and delete it.
-    await fetch(`/${connString}/${id}`, {
+    await fetch(`http://localhost:3001/${connString}/${id}`, {
       method: "DELETE",
     }).catch((error) => {
       //??? might need if error instanceof Error string type confirmation
@@ -1023,8 +1047,10 @@ const Ranges = () => {
     window.alert(`Profile ${form.profileName} deleted`);
 
     //Filter profiles locally after deletion.
-    const newProfiles = profiles.filter((profile) => profile._id !== id);
-    setProfiles(newProfiles);
+    const newProfiles = filteredProfiles.filter(
+      (profile) => profile._id !== id
+    );
+    setAllProfiles(newProfiles);
 
     //And clean up the form.
     clearForm();
@@ -1053,11 +1079,11 @@ const Ranges = () => {
             className="db-btn"
             tabIndex={0}
             style={
-              dbToggle === "Cash"
+              dbToggle === "cash"
                 ? { backgroundColor: "chartreuse", color: "black" }
                 : undefined
             }
-            onClick={() => handleDatabase("Cash")}
+            onClick={() => handleDatabase("cash")}
           >
             Cash game database
           </div>
@@ -1069,7 +1095,7 @@ const Ranges = () => {
                 ? { backgroundColor: "chartreuse", color: "black" }
                 : undefined
             }
-            onClick={() => handleDatabase("Tournament")}
+            onClick={() => handleDatabase("tournament")}
           >
             Tournament database
           </div>
