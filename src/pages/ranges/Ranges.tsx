@@ -636,10 +636,6 @@ const Ranges = () => {
     clearForm();
 
     console.log(eTarget.id);
-    const positionFilteredProfiles = allProfiles.filter(
-      (profile) => profile.position === eTarget.id
-    );
-    setAllProfiles(positionFilteredProfiles);
 
     if (location.database === "cash") {
       //If the open game type is "Cash"
@@ -691,10 +687,6 @@ const Ranges = () => {
 
     clearForm(); //Clears existing form information
     console.log(eTarget.id);
-    const stackFilteredProfiles = allProfiles.filter(
-      (profile) => profile.stackSize === eTarget.id
-    );
-    setAllProfiles(stackFilteredProfiles);
     setStackSize(eTarget.id);
     updateForm({ stack: eTarget.id });
     setStackSizeToggle(eTarget.id);
@@ -717,10 +709,6 @@ const Ranges = () => {
       return;
     }
     console.log(eTarget.id);
-    const rangeTypeFilteredProfiles = allProfiles.filter(
-      (profile) => profile.rangeType === eTarget.id
-    );
-    setAllProfiles(rangeTypeFilteredProfiles);
 
     setProfileId("");
 
@@ -812,20 +800,20 @@ const Ranges = () => {
       //Keys are "call" and "raise".
       //Values are arrays that have combos inside them.
       for (let i in value) {
-        console.log(value[i]);
         if (key === "call" && value[i] in active) {
-          console.log(`Call found: ${value[i]}`);
           setActive((prev) => {
             return { ...prev, [value[i]]: 1 };
           });
         } else if (key === "raise" && value[i] in active) {
-          console.log(`Raise found: ${value[i]}`);
           setActive((prev) => {
             return { ...prev, [value[i]]: 2 };
           });
         }
       }
     }
+    console.log(`Calls in range: ${profile_object.range.call.length === 0 ? "none" : profile_object.range.call}`)
+    console.log(`Raises in range: ${profile_object.range.raise.length === 0 ? "none" : profile_object.range.raise}`)
+    
     //Sets the form to what it finds.
     setForm({
       profileName: profile_object.profileName,
@@ -1194,11 +1182,6 @@ const Ranges = () => {
         <b>Range stack size: </b>
         {form.stackSize === "" ? "empty" : form.stackSize}
         <br />
-        <b>Saved range:</b>
-        <br />
-        Call: {form.range.call.length === 0 ? "empty" : form.range.call}
-        <br />
-        Raise: {form.range.raise.length === 0 ? "empty" : form.range.raise}
       </p>
 
       {/* The hand matrix. */}
