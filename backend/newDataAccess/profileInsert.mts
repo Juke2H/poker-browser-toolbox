@@ -1,27 +1,91 @@
+// Query for data from DB and send it to the service
 
+//Obviously change Promise<any> to corresponding type
 
+import { SupabaseClient } from "@supabase/supabase-js";
+import {
+  GameTypes,
+  NewRangeProfile,
+  RangeProfileRow,
+  RawProfileRange,
+} from "./profileDataTypes.mts";
 
-  //Inserts a row of values from the profile object
-  // Promise<RangeProfileRow>
+// Supabase provides an SQL to REST API Translator:
+// https://supabase.com/docs/guides/api/sql-to-rest
+export class profileInsert {
+  constructor(private database: SupabaseClient) {}
 
-  
-//   async insertProfile(profile: NewRangeProfile): Promise<any> {
-//     const { data, error } = await this.database
-//       .from("range_profiles")
-//       .insert([
-//         { profile_name: `${profile.profile_name}` },
-//         { description: `${profile.description}` },
-//         { range_type: `${profile.range_type}` },
-//         { game_type: `${profile.game_type}` },
-//         { stack_size: `${profile.stack_size}` },
-//         { position: `${profile.position}` },
-//         { is_template: `${profile.is_template}` },
-//         { owner_id: `${profile.owner_id}` },
-//       ])
-//       .select();
-//     if (error) {
-//       throw error;
-//     } else {
-//       return data;
-//     }
-//   }
+  // Needs promise type
+  // Receives a profile to be inserted into the templates (ie user is not logged in)
+  async insertTemplate(
+    profile: NewRangeProfile,
+    combos: Array<RawProfileRange>
+  ): Promise<any> {
+    // Null check owner_id???
+
+    //
+    let query = this.database
+      .from("range_profiles")
+      .insert([
+        {
+          profile_name: profile.profile_name,
+          description: profile.description,
+          range_type: profile.range_type,
+          game_type: profile.game_type,
+          stack_size: profile.stack_size,
+          position: profile.position,
+          is_template: true,
+          owner_id: profile.owner_id, // Should be null when the profile is a template
+        },
+      ])
+      .select() // Select is queried after to give me the data object for inserting ranges
+      .single(); // Normally data is returned inside an array regardless of the number of rows. .single() turns the returned single row from [{...profile}] into {...profile}
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    if (data.length === 0) throw new Error("No data returned");
+
+    // After receiving the template's profile ID, map the combos array to add the profile ID
+    const relatedCombos = combos.map((combo) => ({
+      profile_id: data.id,
+      combo: combo.combo,
+      play: combo.play,
+    }));
+
+    let comboQuery = this.database
+      .from("profile_combos")
+      .insert(relatedCombos)
+      .select();
+
+    const { data: comboData, error: comboError } = await comboQuery;
+
+    if (comboError) throw error;
+
+    // Backticks to separate the console log
+    console.log(`Inserted profile:
+      ${data}
+      and combos:
+      ${comboData}`);
+  }
+
+  // Fetch range profiles by owner_id (which will equal to userId later)
+  // Can't test yet because user auth hasn't been implemented yet
+  async insertById(
+    ownerId: string | undefined,
+    gameType: GameTypes
+  ): Promise<any> {
+    let query = this.database.from("range_profiles");
+    //. insert a profile by ownerid and something else
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.log(error);
+      throw error;
+    } else {
+      console.log(data);
+      return data;
+    }
+  }
+}
