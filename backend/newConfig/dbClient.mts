@@ -1,15 +1,17 @@
 import { createClient } from "@supabase/supabase-js";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./supabase";
 import { config } from "dotenv";
-import { profileSelect } from "../newDataAccess/profileSelect.mts";
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
+
+import { profileSelect } from "../newDataAccess/profileSelect.mts";
+import { profileInsert } from "../newDataAccess/profileInsert.mts";
 
 // fileURLToPath converts file url to path, and import.meta.url is the absolute file url of this module.
 // dirname returns the directory name (and path to it) this module is in
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// This dance with url and path seems to be necessary if .env is in module directory
 // Seems to be easier (import.meta.dirname) on newer node versions
 config({ path: path.resolve(__dirname, '.env') });
 
@@ -26,5 +28,27 @@ const supabase = createClient<Database>(
   process.env.SUPABASE_ANON_KEY!
 );
 
-// Initializes a supabase client with range profile data queries imported
-export const profileSelectRepository = new profileSelect(supabase);
+// I use a repository factory to store the different query classes
+// It's not necessary for something this small but I don't have much experience with classes and getters so I want to get some practice in
+class profileRepositoryFactory {
+
+  constructor(private client: SupabaseClient) {} // Constructor initializes the client and the factory passes it along to the different query classes
+
+  get select() {
+    return new profileSelect(this.client) // The database client profileSelect wants is the same client the factory constructor initializes when called
+  }
+  
+  get insert() {
+    return new profileInsert(this.client)
+  }
+
+  // get update() {
+  //   //
+  // }
+
+  // get delete() {
+  //   //
+  // }
+}
+
+export const profileRepository = new profileRepositoryFactory(supabase);

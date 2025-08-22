@@ -35,7 +35,7 @@ export class profileInsert {
           stack_size: profile.stack_size,
           position: profile.position,
           is_template: true,
-          owner_id: profile.owner_id, // Should be null when the profile is a template
+          owner_id: null, // Templates don't have owner_id:s
         },
       ])
       .select() // Select is queried after to give me the data object for inserting ranges
@@ -48,7 +48,7 @@ export class profileInsert {
 
     // After receiving the template's profile ID, map the combos array to add the profile ID
     const relatedCombos = combos.map((combo) => ({
-      profile_id: data.id,
+      profile_id: data.id, // Without .single() this would be data[0].id
       combo: combo.combo,
       play: combo.play,
     }));
@@ -71,21 +71,21 @@ export class profileInsert {
 
   // Fetch range profiles by owner_id (which will equal to userId later)
   // Can't test yet because user auth hasn't been implemented yet
-  async insertById(
-    ownerId: string | undefined,
-    gameType: GameTypes
-  ): Promise<any> {
-    let query = this.database.from("range_profiles");
-    //. insert a profile by ownerid and something else
+  // async insertById(
+  //   ownerId: string | undefined,
+  //   gameType: GameTypes
+  // ): Promise<any> {
+  //   let query = this.database.from("range_profiles");
+  //   //. insert a profile by ownerid and something else
 
-    const { data, error } = await query;
+  //   const { data, error } = await query;
 
-    if (error) {
-      console.log(error);
-      throw error;
-    } else {
-      console.log(data);
-      return data;
-    }
-  }
+  //   if (error) {
+  //     console.log(error);
+  //     throw error;
+  //   } else {
+  //     console.log(data);
+  //     return data;
+  //   }
+  // }
 }
