@@ -320,7 +320,7 @@ const Ranges = () => {
 
   /*States to show/hide debug functions checkLocation and checkStatus.
   I could put in a button for this inside the page, but I don't think that's good. */
-  const [d_bug] = useState<boolean>(false);
+  const [d_bug] = useState<boolean>(true);
 
   //A function to empty a matrix (set the active of all combos to 0)
   //??? Why are only some keys marked as strings?
@@ -570,8 +570,9 @@ const Ranges = () => {
   //Closes everything under the current database and opens a new one
   const handleDatabase = async (db: string) => {
     //Sets loading indicator and starts loading new profiles
+    console.log(db);
     setIsLoading(true);
-    clearProfile();
+    clearProfile(); //??? might not want to clear profile
     setAllProfiles([]);
     setLocation(() => {
       return { database: `${db}`, collection: "", position: "" };
@@ -604,6 +605,7 @@ const Ranges = () => {
       let profiles_json = await response.json();
       console.log(profiles_json);
       setAllProfiles(profiles_json);
+      updateForm({ gameType: db });
     } catch (error) {
       // Make sure the error message is a string in case of unknown error
       let errorMessage: string = "Something broke";
@@ -633,7 +635,6 @@ const Ranges = () => {
       console.error("Event target has no Id");
       return;
     }
-    clearForm();
 
     console.log(eTarget.id);
 
@@ -669,6 +670,7 @@ const Ranges = () => {
     });
     //And sets toggle to show the open collection.
     setPositionToggle(eTarget.id);
+    updateForm({ position: eTarget.id });
   };
 
   //Sets the stack size to the filter button id
@@ -685,10 +687,9 @@ const Ranges = () => {
       return;
     }
 
-    clearForm(); //Clears existing form information
     console.log(eTarget.id);
     setStackSize(eTarget.id);
-    updateForm({ stack: eTarget.id });
+    updateForm({ stackSize: eTarget.id });
     setStackSizeToggle(eTarget.id);
   };
 
@@ -714,7 +715,7 @@ const Ranges = () => {
 
     setRangeType(eTarget.id);
 
-    updateForm({ type: eTarget.id });
+    updateForm({ rangeType: eTarget.id });
 
     setRangeTypeToggle(eTarget.id);
 
@@ -811,9 +812,21 @@ const Ranges = () => {
         }
       }
     }
-    console.log(`Calls in range: ${profile_object.range.call.length === 0 ? "none" : profile_object.range.call}`)
-    console.log(`Raises in range: ${profile_object.range.raise.length === 0 ? "none" : profile_object.range.raise}`)
-    
+    console.log(
+      `Calls in range: ${
+        profile_object.range.call.length === 0
+          ? "none"
+          : profile_object.range.call
+      }`
+    );
+    console.log(
+      `Raises in range: ${
+        profile_object.range.raise.length === 0
+          ? "none"
+          : profile_object.range.raise
+      }`
+    );
+
     //Sets the form to what it finds.
     setForm({
       profileName: profile_object.profileName,
@@ -921,21 +934,37 @@ const Ranges = () => {
   //Function to create a new profile and then reset form.
   const onSubmit = async () => {
     //Declare a new variable for the profile-to-be-sent.
-    const newProfile = { ...form };
+    const newProfile: Profile = { ...form };
+    let destination: string;
 
     //Attempt to find the collection, and send profile to collection.
-    await fetch(`http://localhost:3001/${connString}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newProfile),
-    }).catch((error) => {
+    try {
+      if (userLoggedIn) {
+        destination = `profiles/allprofiles`;
+      } else {
+        destination = `templates/alltemplates`;
+      }
+      const response = await fetch(`http://localhost:3001/${destination}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newProfile),
+      });
+
+      if (!response.ok) {
+        const message = `An error occurred: ${response.statusText}`;
+        window.alert(message);
+        return;
+      }
+
+      console.log(`Response: ${response}`); //??? This does not run, probably because of the navigate
+    } catch (error) {
       //??? might need if error instanceof Error string type confirmation
       //Window alert if an error occurs.
       window.alert(error);
       return;
-    });
+    }
 
     //And reset everything.
     clearProfile();
@@ -944,7 +973,7 @@ const Ranges = () => {
   };
 
   //Function to edit (patch) a profile.
-  //???
+  //??? fetch not fixed
   const onEdit = async () => {
     console.log(profileId);
 
@@ -1079,7 +1108,7 @@ const Ranges = () => {
             className="db-btn"
             tabIndex={0}
             style={
-              dbToggle === "Tournament"
+              dbToggle === "tournament"
                 ? { backgroundColor: "chartreuse", color: "black" }
                 : undefined
             }
@@ -1217,7 +1246,7 @@ const Ranges = () => {
             className="form-control"
             id="profilename"
             value={form.profileName}
-            onChange={(e) => updateForm({ profilename: e.target.value })}
+            onChange={(e) => updateForm({ profileName: e.target.value })}
           />
         </div>
       ) : null}
@@ -1246,7 +1275,7 @@ const Ranges = () => {
             className="form-control"
             id="type"
             defaultValue="--Pick a Range type--"
-            onChange={(e) => updateForm({ type: e.target.value })}
+            onChange={(e) => updateForm({ rangeType: e.target.value })}
           >
             <option disabled>--Pick a Range type--</option>
             <option value="RFI">RFI</option>
@@ -1266,7 +1295,7 @@ const Ranges = () => {
             className="form-control"
             id="stack"
             defaultValue="--Pick a Stack size--"
-            onChange={(e) => updateForm({ stack: e.target.value })}
+            onChange={(e) => updateForm({ stackSize: e.target.value })}
           >
             <option disabled>--Pick a Stack size--</option>
             <option value="150bb">150bb</option>
