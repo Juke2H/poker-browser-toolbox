@@ -1,5 +1,5 @@
 import { parseTemplates } from "../newServices/matrixGetServices.mts";
-import { profileSelectRepository } from "../newConfig/dbClient.mts";
+import { profileRepository } from "../newConfig/dbClient.mts";
 import express from "express";
 
 // Router might need to be renamed at some point
@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/alltemplates", async (request, response, next) => {
   try {
     const allTemplates = await parseTemplates(
-      profileSelectRepository.selectTemplates.bind(profileSelectRepository),
+      profileRepository.select.selectTemplates.bind(profileRepository.select),
       "all"
     );
     response.send(allTemplates);
@@ -21,7 +21,7 @@ router.get("/alltemplates", async (request, response, next) => {
 router.get("/tournamenttemplates", async (request, response, next) => {
   try {
     const tournamentTemplates = await parseTemplates(
-      profileSelectRepository.selectTemplates.bind(profileSelectRepository),
+      profileRepository.select.selectTemplates.bind(profileRepository.select),
       "tournament"
     );
     response.send(tournamentTemplates);
@@ -33,7 +33,7 @@ router.get("/tournamenttemplates", async (request, response, next) => {
 router.get("/cashtemplates", async (request, response, next) => {
   try {
     const cashTemplates = await parseTemplates(
-      profileSelectRepository.selectTemplates.bind(profileSelectRepository),
+      profileRepository.select.selectTemplates.bind(profileRepository.select),
       "cash"
     );
     response.send(cashTemplates);
@@ -48,48 +48,14 @@ router.get("/cashtemplates", async (request, response, next) => {
 // Creating a new templates profile shouldn't normally happen, but it's here if it has to
 router.post("/alltemplates", async (request, response, next) => {
   try {
-    //
+    console.log(request.body);
   } catch (error) {
     next(error);
   }
 });
 
-// Redoing the template ranges might happen sometimes, though
-router.post("/tournamenttemplates", async (request, response, next) => {
-  try {
-    //
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.post("/cashtemplates", async (request, response, next) => {
-  try {
-    //
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Patching non-ranges might happen sometimes.
+// Needs to be specific id I think
 router.patch("/alltemplates", async (request, response, next) => {
-  try {
-    //
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Patching ranges is going to happen occasionally
-router.patch("/tournamenttemplates", async (request, response, next) => {
-  try {
-    //
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.patch("/cashtemplates", async (request, response, next) => {
   try {
     //
   } catch (error) {
@@ -106,6 +72,7 @@ router.delete("/alltemplates", async (request, response, next) => {
   }
 });
 
+// I think it makes sense to separate between all/mtt/cash, but it should also have by-ID delete
 router.delete("/tournamenttemplates", async (request, response, next) => {
   try {
     //
@@ -114,7 +81,7 @@ router.delete("/tournamenttemplates", async (request, response, next) => {
   }
 });
 
-router.delete("/tournamenttemplates", async (request, response, next) => {
+router.delete("/cashtemplates", async (request, response, next) => {
   try {
     //
   } catch (error) {

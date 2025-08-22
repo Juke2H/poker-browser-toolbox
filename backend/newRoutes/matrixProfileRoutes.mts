@@ -1,5 +1,5 @@
 import { parseProfiles } from "../newServices/matrixGetServices.mts";
-import { profileSelectRepository } from "../newConfig/dbClient.mts";
+import { profileRepository } from "../newConfig/dbClient.mts";
 import express from "express";
 
 // Router might need to be renamed at some point
@@ -11,9 +11,11 @@ const router = express.Router();
 
 
 router.get("/allprofiles/:id", async (request, response, next) => {
+  // Method is bound to use the variables defined in the class constructor instead of global variables
+  // In this case, the database client instance
   try {
     const profilesById = await parseProfiles(
-      profileSelectRepository.selectById.bind(profileSelectRepository),
+      profileRepository.select.selectById.bind(profileRepository.select),
       "all",
       request.params.id
     );
@@ -26,7 +28,7 @@ router.get("/allprofiles/:id", async (request, response, next) => {
 router.get("/tournamentprofiles/:id", async (request, response, next) => {
   try {
     const profilesById = await parseProfiles(
-      profileSelectRepository.selectById.bind(profileSelectRepository),
+      profileRepository.select.selectById.bind(profileRepository.select),
       "tournament",
       request.params.id
     );
@@ -39,7 +41,7 @@ router.get("/tournamentprofiles/:id", async (request, response, next) => {
 router.get("/cashprofiles/:id", async (request, response, next) => {
   try {
     const profilesById = await parseProfiles(
-      profileSelectRepository.selectById.bind(profileSelectRepository),
+      profileRepository.select.selectById.bind(profileRepository.select),
       "cash",
       request.params.id
     );
@@ -50,25 +52,7 @@ router.get("/cashprofiles/:id", async (request, response, next) => {
 });
 
 // This is likely going to be for empty, or newly created, profiles
-router.post("/allprofiles/:id", async (request, response, next) => {
-  try {
-    //
-  } catch (error) {
-    next(error);
-  }
-});
-
-// And these fill out the ranges
-// Might want to use PATCH for that, though
-router.post("/tournamentprofiles/:id", async (request, response, next) => {
-  try {
-    //
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.post("/cashprofiles/:id", async (request, response, next) => {
+router.post("/allprofiles", async (request, response, next) => {
   try {
     //
   } catch (error) {
