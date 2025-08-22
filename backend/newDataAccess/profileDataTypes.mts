@@ -1,5 +1,3 @@
-// Needs interface for the Class maybe
-
 // Types for rows:
 // Types instead of interfaces to prevent multiple declarations merging
 export type RangeProfileRow = {

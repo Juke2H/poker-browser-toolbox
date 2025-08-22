@@ -16,32 +16,15 @@
     stack: string;
   } */
 
-import { profileSelectRepository } from "../newConfig/dbClient.mts";
 import {
   RangeProfileRow,
   RawProfileRange,
   GameTypes,
 } from "../newDataAccess/profileDataTypes.mts";
 
-export type ProfileRanges = {
-  call: Array<string>;
-  raise: Array<string>;
-};
+import { ProfileRangeTypes, ProfileTypes } from "./matrixServiceTypes.mts";
 
-export type ProfileTypes = {
-  _id: string;
-  profileName: string;
-  description: string | null;
-  rangeType: string;
-  gameType: string;
-  stackSize: string;
-  position: string;
-  isTemplate?: boolean;
-  ownerId?: string | null;
-  range?: ProfileRanges;
-};
-
-// Parses fetched templates
+// Receives and parses fetched templates
 // No class needed because service functions do not maintain a state/instance/class/etc
 export async function parseTemplates(
   templateFunc: (gameType: GameTypes) => Promise<Array<RangeProfileRow>>,
@@ -64,8 +47,11 @@ export async function parseTemplates(
       position,
     } = template;
 
+    const templateCombos: Array<RawProfileRange> | undefined =
+      template.profile_combos;
+
     //If the profile doesn't have combos, skip the rest
-    if (!template.profile_combos) {
+    if (!templateCombos) {
       console.warn(`Missing combos for template ID: ${template.id}`);
 
       //Return written open both for readability and to transform Types
@@ -80,13 +66,13 @@ export async function parseTemplates(
       };
     }
 
-    const parsedCombos: ProfileRanges = {
+    const parsedCombos: ProfileRangeTypes = {
       call: [],
       raise: [],
     };
 
     // A destructured parameter assigns variables combo and play to the values that match those keys
-    template.profile_combos.forEach(({ combo, play }) => {
+    templateCombos.forEach(({ combo, play }) => {
       parsedCombos[play].push(combo);
     });
 
@@ -131,8 +117,11 @@ export async function parseProfiles(
       position,
     } = profile;
 
+    const profileCombos: Array<RawProfileRange> | undefined =
+      profile.profile_combos;
+
     //If the profile doesn't have combos, skip the rest
-    if (!profile.profile_combos) {
+    if (!profileCombos) {
       console.warn(`Missing combos for template ID: ${profile.id}`);
 
       //Return written open both for readability and to transform Types
@@ -147,13 +136,13 @@ export async function parseProfiles(
       };
     }
 
-    const parsedCombos: ProfileRanges = {
+    const parsedCombos: ProfileRangeTypes = {
       call: [],
       raise: [],
     };
 
     // A destructured parameter assigns variables combo and play to the values that match those keys
-    profile.profile_combos.forEach(({ combo, play }) => {
+    profileCombos.forEach(({ combo, play }) => {
       parsedCombos[play].push(combo);
     });
 
