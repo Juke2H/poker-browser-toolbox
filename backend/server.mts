@@ -27,8 +27,8 @@ server.use("/templates", templateRoutes);
 server.use("/profiles", profileRoutes);
 
 // Handles browser refreshes
-server.use('/{*splat}', (request, response) => {
-  response.sendFile('index.html', { root: 'public' });
+server.use("/{*splat}", (request, response) => {
+  response.sendFile("index.html", { root: "public" });
 });
 
 // Handles errors that call next()
@@ -42,7 +42,7 @@ server.listen(PORT, async () => {
     console.error("Server failed to start:", {
       // If error is known, show message, otherwise show "Unknown error"
       error: error instanceof Error ? error.message : "Unknown error",
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toString(),
     });
     // Log the exit due to error
     process.on("exit", (code) => {

@@ -5,7 +5,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import {
   GameTypes,
-  NewRangeProfile,
   RangeProfileRow,
   RawProfileRange,
 } from "./profileDataTypes.mts";
@@ -18,7 +17,7 @@ export class profileInsert {
   // Needs promise type
   // Receives a profile to be inserted into the templates (ie user is not logged in)
   async insertTemplate(
-    profile: NewRangeProfile,
+    profile: RangeProfileRow,
     combos: Array<RawProfileRange>
   ): Promise<any> {
     // Null check owner_id???

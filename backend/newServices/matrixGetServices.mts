@@ -37,6 +37,7 @@ export async function parseTemplates(
   }
 
   const parsedTemplates: Array<ProfileTypes> = templates.map((template) => {
+    // Destructuring to reassign (rename) variables
     const {
       id: _id,
       profile_name: profileName,
@@ -45,36 +46,25 @@ export async function parseTemplates(
       game_type: gameType,
       stack_size: stackSize,
       position,
+      profile_combos: range,
     } = template;
 
     const templateCombos: Array<RawProfileRange> | undefined =
       template.profile_combos;
-
-    //If the profile doesn't have combos, skip the rest
-    if (!templateCombos) {
-      console.warn(`Missing combos for template ID: ${template.id}`);
-
-      //Return written open both for readability and to transform Types
-      return {
-        _id,
-        profileName,
-        description,
-        rangeType,
-        gameType,
-        stackSize,
-        position,
-      };
-    }
 
     const parsedCombos: ProfileRangeTypes = {
       call: [],
       raise: [],
     };
 
-    // A destructured parameter assigns variables combo and play to the values that match those keys
-    templateCombos.forEach(({ combo, play }) => {
-      parsedCombos[play].push(combo);
-    });
+    if (templateCombos) {
+      // A destructured parameter assigns variables combo and play to the values that match those keys
+      templateCombos.forEach(({ combo, play }) => {
+        parsedCombos[play].push(combo);
+      });
+    } else {
+      console.warn(`Missing combos for template id: ${_id}`);
+    }
 
     // Written open to transform Types
     return {
@@ -115,36 +105,25 @@ export async function parseProfiles(
       game_type: gameType,
       stack_size: stackSize,
       position,
+      profile_combos: range,
     } = profile;
 
     const profileCombos: Array<RawProfileRange> | undefined =
       profile.profile_combos;
-
-    //If the profile doesn't have combos, skip the rest
-    if (!profileCombos) {
-      console.warn(`Missing combos for template ID: ${profile.id}`);
-
-      //Return written open both for readability and to transform Types
-      return {
-        _id,
-        profileName,
-        description,
-        rangeType,
-        gameType,
-        stackSize,
-        position,
-      };
-    }
 
     const parsedCombos: ProfileRangeTypes = {
       call: [],
       raise: [],
     };
 
-    // A destructured parameter assigns variables combo and play to the values that match those keys
-    profileCombos.forEach(({ combo, play }) => {
-      parsedCombos[play].push(combo);
-    });
+    if (profileCombos) {
+      // A destructured parameter assigns variables combo and play to the values that match those keys
+      profileCombos.forEach(({ combo, play }) => {
+        parsedCombos[play].push(combo);
+      });
+    } else {
+      console.warn(`Missing combos for profile id: ${_id}`);
+    }
 
     // Written open to transform Types
     return {
