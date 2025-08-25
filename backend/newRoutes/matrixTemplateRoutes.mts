@@ -1,4 +1,5 @@
 import { parseTemplates } from "../newServices/matrixGetServices.mts";
+import { parseTemplateInsert } from "../newServices/matrixPostServices.mts";
 import { profileRepository } from "../newConfig/dbClient.mts";
 import express from "express";
 
@@ -48,7 +49,9 @@ router.get("/cashtemplates", async (request, response, next) => {
 // Creating a new templates profile shouldn't normally happen, but it's here if it has to
 router.post("/alltemplates", async (request, response, next) => {
   try {
-    console.log(request.body);
+    parseTemplateInsert(
+      /*profileRepository.insert.insertTemplate.bind(profileRepository.insert), */ request.body
+    );
   } catch (error) {
     next(error);
   }

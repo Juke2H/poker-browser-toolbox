@@ -5,7 +5,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import {
   GameTypes,
-  NewRangeProfile,
   RangeProfileRow,
   RawProfileRange,
 } from "./profileDataTypes.mts";
