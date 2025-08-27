@@ -50,7 +50,8 @@ router.get("/cashtemplates", async (request, response, next) => {
 router.post("/alltemplates", async (request, response, next) => {
   try {
     parseTemplateInsert(
-      /*profileRepository.insert.insertTemplate.bind(profileRepository.insert), */ request.body
+      profileRepository.insert.insertTemplate.bind(profileRepository.insert),
+      request.body
     );
   } catch (error) {
     next(error);

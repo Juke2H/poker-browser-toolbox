@@ -1,5 +1,3 @@
-// Combos need to be mapped to match RawProfileRange typing without the ID
-// Meaning [{combo: x, play: y}, {...}, {...}]
 
 import {
   RangeProfileRow,
@@ -10,10 +8,10 @@ import {
 import { ProfileTypes, ProfileRangeTypes } from "./matrixServiceTypes.mts";
 
 export async function parseTemplateInsert(
-  // templateInsertfunc: (
-  //   insertedProfile: RangeProfileRow,
-  //   insertedCombos: Array<RawProfileRange>
-  // ) => Promise<void>,
+  templateInsertfunc: (
+    insertedProfile: RangeProfileRow,
+    insertedCombos: Array<RawProfileRange>
+  ) => Promise<void>,
   receivedProfile: ProfileTypes
 ) {
   // Receive a profile, parse it into a form that can be inserted into the db, then call the data access method.
@@ -48,7 +46,8 @@ export async function parseTemplateInsert(
     console.log(`
       Parsed profile: ${JSON.stringify(parsedProfile)}
       Parsed range: ${JSON.stringify(combinedRange)}`);
-    // templateInsertfunc(parsedProfile, combinedRange)
+
+    templateInsertfunc(parsedProfile, combinedRange)
   }
 }
 
