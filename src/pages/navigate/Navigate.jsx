@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Navigate = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    console.log("Navigated");
+    console.log("Submitted");
     navigate("/ranges");
   });
 

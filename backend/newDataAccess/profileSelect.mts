@@ -48,7 +48,7 @@ export class profileSelect {
     if (error) {
       throw error;
     } else {
-      console.log(data);
+      console.log(JSON.stringify(data));
       return data;
     }
   }

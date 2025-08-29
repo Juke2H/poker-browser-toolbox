@@ -63,9 +63,9 @@ export class profileInsert {
 
     // Backticks to separate the console log
     console.log(`Inserted profile:
-      ${data}
+      ${JSON.stringify(data)}
       and combos:
-      ${comboData}`);
+      ${JSON.stringify(comboData)}`);
   }
 
   // Fetch range profiles by owner_id (which will equal to userId later)

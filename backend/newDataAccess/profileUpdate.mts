@@ -7,7 +7,7 @@ import {
 
 // Supabase provides an SQL to REST API Translator:
 // https://supabase.com/docs/guides/api/sql-to-rest
-export class profileInsert {
+export class profileUpdate {
   constructor(private database: SupabaseClient) {}
 
   // Needs promise type
@@ -67,7 +67,7 @@ export class profileInsert {
     if (comboError) throw error;
 
     // Backticks to separate the console log
-    console.log(`Inserted profile:
+    console.log(`Updated profile:
       ${JSON.stringify(data)}
       and combos:
       ${JSON.stringify(comboData)}`);
@@ -75,7 +75,7 @@ export class profileInsert {
 
   // Fetch range profiles by owner_id (which will equal to userId later)
   // Can't test yet because user auth hasn't been implemented yet
-  // async insertById(
+  // async updateById(
   //   ownerId: string | undefined,
   //   gameType: GameTypes
   // ): Promise<any> {

@@ -9,7 +9,7 @@ import { ProfileTypes, ProfileRangeTypes } from "./matrixServiceTypes.mts";
 
 export async function parseTemplateUpdate(
   templateUpdatefunc: (
-    insertedProfile: RangeProfileRow,
+    insertedProfile: Partial<RangeProfileRow>,
     insertedCombos: Array<RawProfileRange>,
     profileId: String
   ) => Promise<void>,

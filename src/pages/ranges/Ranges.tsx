@@ -602,9 +602,9 @@ const Ranges = () => {
       }
 
       //Wait for and take the data as JavaScript objects.
-      let profiles_json = await response.json();
-      console.log(profiles_json);
-      setAllProfiles(profiles_json);
+      let result = await response.json();
+      console.log(result);
+      setAllProfiles(result);
       updateForm({ gameType: db });
     } catch (error) {
       // Make sure the error message is a string in case of unknown error
@@ -958,7 +958,9 @@ const Ranges = () => {
         return;
       }
 
-      console.log(`Response: ${response}`); //??? This does not run, probably because of the navigate
+      const result = await response.json();
+
+      console.log(`Response: ${JSON.stringify(result)}`); //??? This does not run, probably because of the navigate
     } catch (error) {
       //??? might need if error instanceof Error string type confirmation
       //Window alert if an error occurs.
@@ -973,7 +975,6 @@ const Ranges = () => {
   };
 
   //Function to edit (patch) a profile.
-  //??? fetch not fixed
   const onEdit = async () => {
     console.log(profileId);
 
@@ -991,18 +992,41 @@ const Ranges = () => {
       },
     };
 
-    //Try to find the profile that will be patched, and patch it.
-    await fetch(`http://localhost:3001/${connString}/${profileId}`, {
-      method: "PATCH",
-      body: JSON.stringify(editedProfile),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).catch((error) => {
+    let destination;
+
+    //Attempt to find the collection, and send profile to collection.
+    try {
+      if (userLoggedIn) {
+        destination = `profiles/allprofiles`;
+      } else {
+        destination = `templates/alltemplates`;
+      }
+      const response = await fetch(
+        `http://localhost:3001/${destination}/${profileId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editedProfile),
+        }
+      );
+
+      if (!response.ok) {
+        const message = `An error occurred: ${response.statusText}`;
+        window.alert(message);
+        return;
+      }
+
+      const result = await response.json();
+
+      console.log(`Response: ${JSON.stringify(result)}`); //??? This does not run, probably because of the navigate
+    } catch (error) {
       //??? might need if error instanceof Error string type confirmation
+      //Window alert if an error occurs.
       window.alert(error);
       return;
-    });
+    }
     console.log("Profile edited");
   };
 
@@ -1050,27 +1074,48 @@ const Ranges = () => {
 
   //Function for deleting a profile.
   const deleteProfile = async (id: string) => {
+    let destination;
+
     //Try to find the profile, and delete it.
-    await fetch(`http://localhost:3001/${connString}/${id}`, {
-      method: "DELETE",
-    }).catch((error) => {
+    try {
+      if (userLoggedIn) {
+        destination = `profiles/allprofiles`;
+      } else {
+        destination = `templates/alltemplates`;
+      }
+      const response = await fetch(
+        `http://localhost:3001/${destination}/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const message = `An error occurred: ${response.statusText}`;
+        window.alert(message);
+        return;
+      }
+
+      console.log(`Profile ${form.profileName} deleted`);
+
+      //Filter profiles locally after deletion.
+      const newProfiles = allProfiles.filter((profile) => profile._id !== id);
+      setAllProfiles(newProfiles);
+
+      //And clean up the form.
+      clearForm();
+      setDel(false);
+    } catch (error) {
       //??? might need if error instanceof Error string type confirmation
-      //And alert if profile isn't found.
-      window.alert(error);
+      //Window alert if an error occurs.
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred";
+      window.alert(errorMessage);
       return;
-    });
-
-    console.log(`Profile ${form.profileName} deleted`);
-    window.alert(`Profile ${form.profileName} deleted`);
-
-    //Filter profiles locally after deletion.
-    const newProfiles = filteredProfiles.filter(
-      (profile) => profile._id !== id
-    );
-    setAllProfiles(newProfiles);
-
-    //And clean up the form.
-    clearForm();
+    }
   };
 
   return (
