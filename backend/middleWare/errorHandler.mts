@@ -18,6 +18,7 @@ const errorHandler = (error, request, response, next) => {
   }
 
   // Handling logic for custom thrown AppErrors
+  // ???check typing
   if (error instanceof AppError) {
     const errorResponse: {
       status: string;
@@ -29,14 +30,23 @@ const errorHandler = (error, request, response, next) => {
       status: "error",
       // code: error.code,
       message: error.message,
-      requestId: request.headers["x-request-id"]
+      details: error.details,
+      requestId: request.headers["x-request-id"],
     };
 
-    if (error.details) {
-      errorResponse.details = error.details;
-    }
-
     return response.status(error.statusCode).json(errorResponse);
+  }
+
+  // Handle other known errors
+  if (error instanceof Error) {
+    // Determine status code based on error type
+    let statusCode = 500;
+    // If error.name is TypeError, then 400
+    // If error.name is ReferenceError, then 500
+    // if error.name is SyntaxError, then 400
+    // Could probably stack the ifs
+
+    //return response.status(statuscode).json({ status: //, message: //, request.headers["x-request-id"] })
   }
 };
 
